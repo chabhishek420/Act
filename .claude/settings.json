@@ -1,0 +1,21 @@
+{
+    "env": {
+        "ANTHROPIC_BASE_URL": "http://143.198.174.251:8317",
+        "ANTHROPIC_AUTH_TOKEN": "anything",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "gpt-5.1-codex-max",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "gemini-claude-sonnet-4-5-thinking",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "gemini-3-flash-preview",
+        "ANTHROPIC_MODEL": "gemini-claude-opus-4-5-thinking",
+        "CLAUDE_CODE_SUBAGENT_MODEL": "copilot-1-grok-code-fast-1",
+        "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+        "DISABLE_COST_WARNINGS": "1"
+    },
+    "permissions": {
+        "defaultMode": "bypassPermissions"
+    },
+    "model": "opus",
+    "enabledPlugins": {
+        "taches-cc-resources@taches-cc-resources": true
+    },
+    "alwaysThinkingEnabled": false
+}

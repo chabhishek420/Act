@@ -1,0 +1,49 @@
+  ├─ API Key: ak_d...j6-P
+  ├─ Provider: none
+  ├─ Base URL: https://backend.composio.dev/api/v3
+  ├─ Timeout: 30.0s
+  └─ Logging: disabled
+[ComposioManager] ✅ SDK initialized successfully
+2026-01-22 23:58:56.485591+0530 Rube-ios[44061:5715220] [Invalid Configuration] No symbol named 'gauge.with.dots.needle' found in system symbol set
+2026-01-22 23:58:56.516976+0530 Rube-ios[44061:5715220] [Invalid Configuration] No symbol named 'gauge.with.dots.needle' found in system symbol set
+2026-01-22 23:58:56.637363+0530 Rube-ios[44061:5715220] [Invalid Configuration] No symbol named 'gauge.with.dots.needle' found in system symbol set
+2026-01-22 23:58:56.638396+0530 Rube-ios[44061:5715220] [Invalid Configuration] No symbol named 'gauge.with.dots.needle' found in system symbol set
+2026-01-22 23:58:56.698452+0530 Rube-ios[44061:5715220] [Invalid Configuration] No symbol named 'gauge.with.dots.needle' found in system symbol set
+2026-01-22 23:58:56.700416+0530 Rube-ios[44061:5715220] [Invalid Configuration] No symbol named 'gauge.with.dots.needle' found in system symbol set
+✅ Live: Successfully fetched 863 toolkits from Composio
+✔ Test "Verify Composio Connectivity (Live)" passed after 1.270 seconds.
+◇ Test "Verify OpenAI Proxy Connectivity (Live)" started.
+2026-01-22 23:58:56.893559+0530 Rube-ios[44061:5715412] [NativeChatService] Message history count: 0
+[NativeChatService] 🔑 API Key: anything...
+[NativeChatService] 🌐 Base URL: http://143.198.174.251:8317
+[NativeChatService] 🤖 Model: gemini-claude-sonnet-4-5
+[NativeChatService] 🔧 Creating Tool Router session for user: rs622502@gmail.com
+[ComposioManager] 🔄 Creating Tool Router session for: rs622502@gmail.com
+[AppwriteConversationService] Loaded 0 conversations
+[ComposioManager] ✅ Session created: trs_GaURYkM2l_k5
+[ComposioManager]    MCP URL: https://backend.composio.dev/tool_router/trs_GaURYkM2l_k5/mcp
+[ComposioManager]    Meta tools: 6
+[NativeChatService] 🔄 Using session: trs_GaURYkM2l_k5
+[ComposioManager] 📦 Fetching session tools for: trs_GaURYkM2l_k5
+[ComposioManager] ⚠️ Failed to fetch all tools: Validation error: Malformed JSON in request body
+✘ Test "Verify OpenAI Proxy Connectivity (Live)" recorded an issue at LiveIntegrationTests.swift:19:6: Caught error: validationError(message: "Malformed JSON in request body", details: nil)
+✘ Test "Verify OpenAI Proxy Connectivity (Live)" failed after 1.142 seconds with 1 issue.
+◇ Test "Verify Tool Call Pipeline (Live Integration)" started.
+2026-01-22 23:58:58.035104+0530 Rube-ios[44061:5715354] [NativeChatService] Message history count: 0
+[NativeChatService] 🔑 API Key: anything...
+[NativeChatService] 🌐 Base URL: http://143.198.174.251:8317
+[NativeChatService] 🤖 Model: gemini-claude-sonnet-4-5
+[NativeChatService] 🔧 Creating Tool Router session for user: rs622502@gmail.com
+[ComposioManager] ♻️ Reusing cached session: trs_GaURYkM2l_k5
+[NativeChatService] 🔄 Using session: trs_GaURYkM2l_k5
+[ComposioManager] 📦 Fetching session tools for: trs_GaURYkM2l_k5
+[ComposioManager] ⚠️ Failed to fetch all tools: Validation error: Malformed JSON in request body
+✘ Test "Verify Tool Call Pipeline (Live Integration)" recorded an issue at LiveIntegrationTests.swift:35:6: Caught error: validationError(message: "Malformed JSON in request body", details: nil)
+✘ Test "Verify Tool Call Pipeline (Live Integration)" failed after 0.525 seconds with 1 issue.
+✘ Suite "Live API Integration Tests" failed after 2.942 seconds with 2 issues.
+✘ Test run with 3 tests in 1 suite failed after 2.943 seconds with 2 issues.
+2026-01-22 23:59:32.525 xcodebuild[43969:5714380] [MT] IDETestOperationsObserverDebug: 49.542 elapsed -- Testing started completed.
+2026-01-22 23:59:32.525 xcodebuild[43969:5714380] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-01-22 23:59:32.525 xcodebuild[43969:5714380] [MT] IDETestOperationsObserverDebug: 49.542 sec, +49.542 sec -- end
+
+Test session results, code coverage, and logs:

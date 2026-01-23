@@ -1,0 +1,10 @@
+{
+  "setup-worktree": [
+    "cp $ROOT_WORKTREE_PATH/Secrets.xcconfig Secrets.xcconfig",
+    "cp $ROOT_WORKTREE_PATH/appwrite.config.json appwrite.config.json",
+    "cp $ROOT_WORKTREE_PATH/project.yml project.yml",
+    "mkdir -p Rube-next/rube-backend",
+    "cp $ROOT_WORKTREE_PATH/Rube-next/rube-backend/.env.local Rube-next/rube-backend/.env.local",
+    "cd Rube-next/rube-backend && npm install"
+  ]
+}

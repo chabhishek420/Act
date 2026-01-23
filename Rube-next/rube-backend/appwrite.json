@@ -1,0 +1,93 @@
+{
+  "projectId": "6961fcac000432c6a72a",
+  "projectName": "Rube",
+  "databases": [
+    {
+      "databaseId": "rube-chat",
+      "name": "Rube Chat",
+      "enabled": true,
+      "collections": [
+        {
+          "collectionId": "conversations",
+          "name": "Conversations",
+          "enabled": true,
+          "documentSecurity": true,
+          "attributes": [
+            {
+              "key": "user_id",
+              "type": "string",
+              "size": 255,
+              "required": true,
+              "array": false
+            },
+            {
+              "key": "title",
+              "type": "string",
+              "size": 500,
+              "required": false,
+              "array": false
+            }
+          ],
+          "indexes": [
+            {
+              "key": "user_id_idx",
+              "type": "key",
+              "attributes": ["user_id"],
+              "orders": ["ASC"]
+            }
+          ],
+          "permissions": [
+            "create(\"users\")"
+          ]
+        },
+        {
+          "collectionId": "messages",
+          "name": "Messages",
+          "enabled": true,
+          "documentSecurity": true,
+          "attributes": [
+            {
+              "key": "conversation_id",
+              "type": "string",
+              "size": 255,
+              "required": true,
+              "array": false
+            },
+            {
+              "key": "user_id",
+              "type": "string",
+              "size": 255,
+              "required": true,
+              "array": false
+            },
+            {
+              "key": "content",
+              "type": "string",
+              "size": 10000,
+              "required": true,
+              "array": false
+            },
+            {
+              "key": "role",
+              "type": "string",
+              "size": 50,
+              "required": true,
+              "array": false
+            }
+          ],
+          "indexes": [
+            {
+              "key": "conversation_id_idx",
+              "type": "key",
+              "attributes": ["conversation_id"],
+              "orders": ["ASC"]
+            }
+          ],
+          "permissions": [
+            "create(\"users\")"
+          ]
+        }
+      ]
+    }
+  ]
+}
