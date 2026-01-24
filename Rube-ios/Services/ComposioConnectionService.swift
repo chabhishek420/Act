@@ -12,6 +12,7 @@ import Composio
 /// Service for managing connected accounts via Composio SDK
 @available(iOS 15.0, *)
 @Observable
+@MainActor
 final class ComposioConnectionService {
     
     // MARK: - Singleton
@@ -128,10 +129,10 @@ final class ComposioConnectionService {
     /// - Returns: The active connected account
     func waitForConnection(accountId: String, timeout: TimeInterval = 60) async throws -> ConnectedAccount {
         print("[ComposioConnectionService] Waiting for connection: \(accountId)")
-        
-        // The SDK has a built-in waitForConnection method
-        let account = try await ComposioManager.shared.composio.connectedAccounts.waitForConnection(
-            id: accountId,
+
+        // Use the manager instead of accessing composio directly
+        let account = try await composioManager.waitForConnection(
+            accountId: accountId,
             timeout: timeout
         )
         

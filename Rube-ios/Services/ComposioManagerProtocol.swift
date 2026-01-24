@@ -32,4 +32,32 @@ protocol ComposioManagerProtocol: Sendable {
     /// - Parameter userId: User identifier
     /// - Returns: Array of connected accounts
     func getConnectedAccounts(userId: String) async throws -> [ConnectedAccount]
+    
+    // MARK: - Tool Router
+    
+    func getSession(for userId: String) async throws -> ToolRouterSession
+    
+    func getMetaTools(sessionId: String) async throws -> [Tool]
+    
+    func executeMetaTool(
+        _ slug: String,
+        sessionId: String,
+        arguments: [String: Any]?
+    ) async throws -> ToolRouterExecuteResponse
+    
+    func executeSessionTool(
+        _ toolSlug: String,
+        sessionId: String,
+        arguments: [String: Any]?
+    ) async throws -> ToolRouterExecuteResponse
+    
+    func createSessionLink(
+        for toolkit: String,
+        sessionId: String
+    ) async throws -> ToolRouterLinkResponse
+
+    func waitForConnection(
+        accountId: String,
+        timeout: TimeInterval
+    ) async throws -> ConnectedAccount
 }
