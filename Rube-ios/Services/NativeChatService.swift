@@ -1,7 +1,13 @@
 import Foundation
 import SwiftOpenAI
-import Composio
 import OSLog
+// Import SDK types specifically to avoid module-name collision with 'Composio' class
+import struct Composio.AnyCodable
+import struct Composio.Tool
+import struct Composio.ToolParameters
+import struct Composio.ToolRouterSession
+import struct Composio.ToolRouterExecuteResponse
+import struct Composio.ToolRouterLinkResponse
 
 // MARK: - Custom Errors
 
@@ -43,6 +49,12 @@ final class NativeChatService {
     private(set) var streamingContent = ""
     private(set) var streamingToolCalls: [ToolCall] = []
     
+    // Memory storage as prescribed by Rube system prompt
+    private var currentMemory: [String: [String]] = [:]
+    
+    // Pending user input request from REQUEST_USER_INPUT tool
+    private(set) var pendingUserInputRequest: UserInputRequest?
+    
     // MARK: - Initialization
     
     init(
@@ -53,127 +65,87 @@ final class NativeChatService {
         if let openAI = openAI {
             self.openAI = openAI
         } else {
-            // Base URL should NOT include /v1 - the SDK appends it automatically
-            // See: https://github.com/jamesrochabrun/SwiftOpenAI README "Custom URL" section
             let service = OpenAIServiceFactory.service(
                 apiKey: ComposioConfig.openAIKey,
                 overrideBaseURL: ComposioConfig.openAIBaseURL,
-                debugEnabled: true  // Enable debug logging to see request URLs
+                debugEnabled: true
             )
             self.openAI = OpenAIServiceWrapper(service: service)
         }
     }
 
-    // MARK: - Models
-
     func fetchModels() async throws -> [String] {
         try await openAI.listModels()
     }
     
-    // MARK: - Send Message
-
     func sendMessage(
         _ content: String,
         messages: [Message],
         conversationId: String?,
         onNewConversationId: @escaping (String) -> Void
     ) async throws -> Message {
-        logger.debug("Starting sendMessage for content: \(content, privacy: .private)")
-        logger.info("Message history count: \(messages.count)")
-        print("[NativeChatService] 🔑 API Key: \(ComposioConfig.openAIKey.prefix(10))...")
-        print("[NativeChatService] 🌐 Base URL: \(ComposioConfig.openAIBaseURL)")
-        print("[NativeChatService] 🤖 Model: \(ComposioConfig.llmModel)")
-
         await MainActor.run {
             self.isStreaming = true
             self.streamingContent = ""
             self.streamingToolCalls = []
         }
+        defer { self.isStreaming = false }
 
-        defer {
-            self.isStreaming = false
-        }
-
-        // 1. Get Tools from Composio
         let userId = AuthService.shared.userEmail ?? "default_user"
-        print("[NativeChatService] 🔧 Fetching tools for user: \(userId)")
+        let session = try await composioManager.getSession(for: userId)
+        let sessionId = session.sessionId
+
+        // Skip fetching tools from API (causes "resource exceeds maximum size" error with 500+ tools)
+        // Instead, manually define meta-tools for OpenAI function calling
+        let openAITools = createMetaToolSchemas()
+
+        // Dynamic context
+        let timezone = TimeZone.current.identifier
+        let currentTime = Date().formatted(date: .abbreviated, time: .shortened)
+        let executionMode = ExecutionModeSettings.shared.currentMode
+
+        // Generate system prompt from external configuration
+        let systemPrompt = SystemPromptConfig.generatePrompt(
+            timezone: timezone,
+            currentTime: currentTime,
+            executionMode: executionMode
+        )
+
+        var chatMessages: [ChatCompletionParameters.Message] = [.init(role: .system, content: .text(systemPrompt))]
         
-        // Dynamically fetch connected toolkits first
-        let connectedAccounts = try? await composioManager.getConnectedAccounts(userId: userId)
-        var toolkits = Array(Set(connectedAccounts?.map { $0.toolkit } ?? []))
-        
-        // Fallback to defaults if none connected
-        if toolkits.isEmpty {
-            toolkits = ["GITHUB", "GMAIL", "SLACK"]
-        }
-        print("[NativeChatService] 📦 Toolkits determined: \(toolkits)")
-
-        let composioTools = try await composioManager.getTools(userId: userId, toolkits: toolkits)
-        print("[NativeChatService] ✅ Fetched \(composioTools.count) tools")
-
-        // 2. Format tools for SwiftOpenAI with mapping
-        var toolNameMapping: [String: String] = [:]
-        let openAITools = composioTools.compactMap { tool -> ChatCompletionParameters.Tool? in
-            // OpenAI requires: ^[a-zA-Z0-9_-]{1,64}$
-            let technicalName = tool.slug
-                .replacingOccurrences(of: ":", with: "_")
-                .replacingOccurrences(of: ".", with: "_")
-                .replacingOccurrences(of: " ", with: "_")
-                .components(separatedBy: CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "_-")).inverted)
-                .joined()
-
-            guard !technicalName.isEmpty else { return nil }
-            toolNameMapping[technicalName] = tool.slug
-
-            return ChatCompletionParameters.Tool(
-                function: .init(
-                    name: technicalName,
-                    strict: nil,
-                    description: tool.description ?? "",
-                    parameters: tool.inputParameters?.asJSONSchema ?? JSONSchema(type: .object, additionalProperties: false)
-                )
-            )
-        }
-        
-        // 3. Prepare Messages
-        var chatMessages: [ChatCompletionParameters.Message] = messages.compactMap { msg in
+        // Accurate History Mapping
+        chatMessages.append(contentsOf: messages.compactMap { msg in
             switch msg.role {
-            case .user: return .init(role: .user, content: .text(msg.content))
-            case .assistant: return .init(role: .assistant, content: .text(msg.content))
-            case .system: return .init(role: .system, content: .text(msg.content))
+            case .user: 
+                return .init(role: .user, content: .text(msg.content))
+            case .assistant: 
+                let openaiToolCalls = msg.toolCalls?.map { tc in
+                    let argsString = (try? JSONSerialization.data(withJSONObject: tc.input)).flatMap { String(data: $0, encoding: .utf8) } ?? "{}"
+                    return SwiftOpenAI.ToolCall(id: tc.id, function: .init(arguments: argsString, name: tc.name))
+                }
+                return .init(role: .assistant, content: .text(msg.content), toolCalls: openaiToolCalls)
+            case .system: 
+                return .init(role: .system, content: .text(msg.content))
+            case .tool:
+                return .init(role: .tool, content: .text(msg.content), toolCallID: msg.toolCallID ?? "")
             }
-        }
+        })
         
         if messages.last?.content != content || messages.last?.role != .user {
             chatMessages.append(.init(role: .user, content: .text(content)))
         }
         
-        let assistantMessage = try await runChatLoop(
-            messages: &chatMessages,
-            tools: openAITools,
-            toolMapping: toolNameMapping
-        )
-        
-        return assistantMessage
+        var currentTools = openAITools
+        return try await runChatLoop(messages: &chatMessages, tools: &currentTools, sessionId: sessionId)
     }
     
-    // MARK: - Chat Loop & Tool Execution
-
     private func runChatLoop(
         messages: inout [ChatCompletionParameters.Message],
-        tools: [ChatCompletionParameters.Tool],
-        toolMapping: [String: String],
+        tools: inout [ChatCompletionParameters.Tool],
+        sessionId: String,
         depth: Int = 0
     ) async throws -> Message {
-        // Prevent infinite loops
-        guard depth < 10 else {
-            print("[NativeChatService] ⚠️ Maximum recursion depth reached")
-            return Message(content: "Error: Tool calling depth exceeded.", role: .assistant)
-        }
-
-        print("[NativeChatService] 🔄 Chat loop iteration \(depth + 1)")
-        print("[NativeChatService] 💬 Messages in history: \(messages.count)")
-        print("[NativeChatService] 🛠️ Available tools: \(tools.count)")
+        guard depth < 10 else { return Message(content: "Error: Tool depth exceeded.", role: .assistant) }
 
         let parameters = ChatCompletionParameters(
             messages: messages,
@@ -185,212 +157,118 @@ final class NativeChatService {
         let accumulator = ToolCallAccumulator()
         var hasToolCalls = false
 
-        // 1. Stream response with error handling and retry logic
-        print("[NativeChatService] 📡 Starting API stream...")
-
-        let stream: AsyncThrowingStream<ChatCompletionChunkObject, Error>
-        do {
-            stream = try await executeWithRetry {
-                try await self.openAI.startStreamedChat(parameters: parameters)
-            }
-            print("[NativeChatService] ✅ Stream started successfully")
-        } catch let error as NSError {
-            print("[NativeChatService] ❌ Stream initiation failed after retries")
-            print("[NativeChatService] ❌ Error domain: \(error.domain), Code: \(error.code)")
-            throw NativeChatError.apiError(error)
-        }
+        let stream = try await executeWithRetry { try await self.openAI.startStreamedChat(parameters: parameters) }
 
         do {
             for try await result in stream {
                 guard let choice = result.choices?.first, let delta = choice.delta else { continue }
-
                 if let content = delta.content {
                     fullContent += content
-                    let currentContent = fullContent
                     self.streamingContent = fullContent
                 }
-
                 if let toolCallsDelta = delta.toolCalls {
                     hasToolCalls = true
                     for call in toolCallsDelta {
-                        let part = ToolCallPart(
-                            index: call.index ?? 0,
-                            id: call.id,
-                            name: call.function.name,
-                            argumentsPart: call.function.arguments
-                        )
-                        accumulator.add(part)
+                        accumulator.add(ToolCallPart(index: call.index ?? 0, id: call.id, name: call.function.name, argumentsPart: call.function.arguments))
                     }
                 }
             }
-            print("[NativeChatService] ✅ Stream completed successfully")
-        } catch let error as NSError {
-            print("[NativeChatService] ❌ Stream processing error")
-            print("[NativeChatService] ❌ Error: \(error)")
-            print("[NativeChatService] ❌ Domain: \(error.domain), Code: \(error.code)")
-            throw NativeChatError.apiError(error)
-        }
+        } catch { throw NativeChatError.apiError(error) }
         
-        // 2. Handle assistant message
         if hasToolCalls {
             let finalizedCalls = accumulator.finalize()
-            
             let assistantToolCalls = finalizedCalls.map { call in
-                let argsString: String
-                if let encoded = try? JSONEncoder().encode(call.arguments) {
-                    argsString = String(data: encoded, encoding: .utf8) ?? "{}"
-                } else {
-                    argsString = "{}"
-                }
-                return SwiftOpenAI.ToolCall(
-                    id: call.id,
-                    function: .init(arguments: argsString, name: call.name)
-                )
+                let argsString = (try? JSONEncoder().encode(call.arguments)).flatMap { String(data: $0, encoding: .utf8) } ?? "{}"
+                return SwiftOpenAI.ToolCall(id: call.id, function: .init(arguments: argsString, name: call.name))
             }
+            messages.append(.init(role: .assistant, content: .text(fullContent), toolCalls: assistantToolCalls))
             
-            // Add assistant message with tool calls to history
-            messages.append(.init(
-                role: .assistant,
-                content: .text(fullContent),
-                toolCalls: assistantToolCalls
-            ))
-            
-            // Execute each tool call
             for call in finalizedCalls {
-                // Get original slug from mapping
-                let originalSlug = toolMapping[call.name] ?? call.name
-                
-                print("[NativeChatService] 🔧 Executing: \(originalSlug) (via \(call.name))")
-                print("[NativeChatService] 📥 Arguments: \(call.arguments)")
-
                 self.streamingToolCalls.append(ToolCall(id: call.id, name: call.name, status: .running))
-
                 do {
-                    let toolResult = try await composioManager.executeTool(
-                        originalSlug,
-                        userId: AuthService.shared.userEmail ?? "default_user",
-                        parameters: call.arguments.dictionary
-                    )
+                    // Handle REQUEST_USER_INPUT specially - this pauses the chat loop for user input
+                    if call.name == "REQUEST_USER_INPUT" {
+                        let request = UserInputRequest(from: call.arguments.dictionary)
+                        self.pendingUserInputRequest = request
+                        
+                        // Update tool call status
+                        if let index = self.streamingToolCalls.firstIndex(where: { $0.id == call.id }) {
+                            self.streamingToolCalls[index].status = .completed
+                            self.streamingToolCalls[index].output = ["status": "waiting_for_user_input", "provider": request.provider]
+                        }
+                        
+                        // Return early with a message indicating we need user input
+                        return Message(
+                            id: UUID().uuidString,
+                            content: "I need some additional information to connect to \(request.provider.capitalized). Please fill in the required fields.",
+                            role: .assistant,
+                            toolCalls: self.streamingToolCalls
+                        )
+                    }
+                    
+                    // Inject memory for MULTI_EXECUTE
+                    var toolArgs = call.arguments.dictionary
+                    if call.name.hasSuffix("MULTI_EXECUTE_TOOL") {
+                        toolArgs["memory"] = currentMemory
+                    }
 
-                    print("[NativeChatService] ✅ Tool execution successful")
+                    let result: ToolRouterExecuteResponse
+                    if call.name.hasPrefix("COMPOSIO_") {
+                        result = try await composioManager.executeMetaTool(call.name, sessionId: sessionId, arguments: toolArgs)
+                    } else {
+                        result = try await composioManager.executeSessionTool(call.name, sessionId: sessionId, arguments: toolArgs)
+                    }
 
                     if let index = self.streamingToolCalls.firstIndex(where: { $0.id == call.id }) {
                         self.streamingToolCalls[index].status = .completed
-                        self.streamingToolCalls[index].output = toolResult.data
+                        self.streamingToolCalls[index].output = result.data.mapValues { $0.value }
+                        
+                        // Capture memory updates from Search or Multi-Execute
+                        if let updatedMemory = result.data["memory"]?.value as? [String: [String]] {
+                            for (app, entries) in updatedMemory {
+                                var current = currentMemory[app] ?? []
+                                current.append(contentsOf: entries)
+                                currentMemory[app] = Array(Set(current)) // De-duplicate
+                            }
+                        }
                     }
 
-                    // Add tool result to history
-                    let resultString: String
-                    if let data = toolResult.data,
-                       let encodedData = try? JSONEncoder().encode(data) {
-                        resultString = String(data: encodedData, encoding: .utf8) ?? "{}"
-                    } else {
-                        resultString = "{}"
+                    // Discover tools
+                    if let schemas = result.data["tool_schemas"]?.value as? [String: Any] {
+                        for (slug, schemaWrapper) in schemas {
+                            if !tools.contains(where: { $0.function.name == slug }), let toolDict = schemaWrapper as? [String: Any] {
+                                let desc = toolDict["description"] as? String ?? ""
+                                let params = toolDict["input_parameters"] as? [String: Any] ?? [:]
+                                tools.append(ChatCompletionParameters.Tool(
+                                    function: .init(name: slug, strict: nil, description: desc, parameters: mapRawDictToSchema(dict: params))
+                                ))
+                            }
+                        }
                     }
 
-                    messages.append(.init(
-                        role: .tool,
-                        content: .text(resultString),
-                        toolCallID: call.id
-                    ))
+                    let resultString = (try? JSONEncoder().encode(result.data)).flatMap { String(data: $0, encoding: .utf8) } ?? "{}"
+                    messages.append(.init(role: .tool, content: .text(resultString), toolCallID: call.id))
                 } catch {
-                    print("[NativeChatService] ❌ Tool execution failed: \(error)")
-
-                    if let index = self.streamingToolCalls.firstIndex(where: { $0.id == call.id }) {
-                        self.streamingToolCalls[index].status = .error
-                    }
-
-                    // Add error result to history
-                    messages.append(.init(
-                        role: .tool,
-                        content: .text("{\"error\": \"\(error.localizedDescription)\"}"),
-                        toolCallID: call.id
-                    ))
+                    if let index = self.streamingToolCalls.firstIndex(where: { $0.id == call.id }) { self.streamingToolCalls[index].status = .error }
+                    messages.append(.init(role: .tool, content: .text("{\"error\": \"\(error.localizedDescription)\"}"), toolCallID: call.id))
                 }
             }
-            
-            // 3. Recurse for final answer
-            return try await runChatLoop(
-                messages: &messages,
-                tools: tools,
-                toolMapping: toolMapping,
-                depth: depth + 1
-            )
+            var nextTools = tools
+            return try await runChatLoop(messages: &messages, tools: &nextTools, sessionId: sessionId, depth: depth + 1)
         } else {
-            // Final message
-            return Message(
-                id: UUID().uuidString,
-                content: fullContent.isEmpty ? "No response." : fullContent,
-                role: .assistant
-            )
+            return Message(id: UUID().uuidString, content: fullContent.isEmpty ? "No response." : fullContent, role: .assistant)
         }
     }
     
-    // MARK: - Helpers
-    
-    private func executeWithRetry<T>(
-        maxAttempts: Int = 3,
-        operation: @MainActor () async throws -> T
-    ) async throws -> T {
-        var lastError: Error?
-        for attempt in 1...maxAttempts {
-            do {
-                return try await operation()
-            } catch {
-                lastError = error
-                print("[NativeChatService] ⚠️ Attempt \(attempt) failed: \(error.localizedDescription)")
-                if attempt < maxAttempts {
-                    let delay = UInt64(pow(2.0, Double(attempt)) * 1_000_000_000)
-                    try await Task.sleep(nanoseconds: delay)
-                }
-            }
-        }
-        throw lastError ?? NativeChatError.invalidResponse
-    }
-}
-
-
-// MARK: - Extensions
-
-extension [String: AnyCodable] {
-    var dictionary: [String: Any] {
-        self.mapValues { $0.value }
-    }
-}
-
-extension ToolParameters {
-    var asJSONSchema: JSONSchema {
-        // Dictionary-based approach is safer when we don't have direct access to internal SDK types
-        guard let data = try? JSONEncoder().encode(self),
-              let dict = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-            return JSONSchema(type: .object, additionalProperties: false)
-        }
-        
-        return mapToSchema(dict: dict)
-    }
-    
-    private func mapToSchema(dict: [String: Any]) -> JSONSchema {
+    private func mapRawDictToSchema(dict: [String: Any]) -> JSONSchema {
         let properties = dict["properties"] as? [String: [String: Any]] ?? [:]
-        let required = dict["required"] as? [String]
-        
         var schemaProperties: [String: JSONSchema] = [:]
-        for (key, propDict) in properties {
-            schemaProperties[key] = mapProperty(propDict)
-        }
-        
-        return JSONSchema(
-            type: .object,
-            properties: schemaProperties.isEmpty ? nil : schemaProperties,
-            required: required,
-            additionalProperties: false
-        )
+        for (key, propDict) in properties { schemaProperties[key] = mapRawProperty(propDict) }
+        return JSONSchema(type: .object, description: dict["description"] as? String, properties: schemaProperties.isEmpty ? nil : schemaProperties, required: dict["required"] as? [String], additionalProperties: false)
     }
-    
-    private func mapProperty(_ dict: [String: Any]) -> JSONSchema {
+
+    private func mapRawProperty(_ dict: [String: Any]) -> JSONSchema {
         let typeStr = dict["type"] as? String ?? "string"
-        let description = dict["description"] as? String
-        let enumValues = dict["enum"] as? [String]
-        
         let type: JSONSchemaType
         switch typeStr.lowercased() {
         case "string": type = .string
@@ -401,30 +279,224 @@ extension ToolParameters {
         case "object": type = .object
         default: type = .string
         }
-        
         var nestedProperties: [String: JSONSchema]? = nil
         if type == .object, let propsDict = dict["properties"] as? [String: [String: Any]] {
             var mapped: [String: JSONSchema] = [:]
-            for (k, v) in propsDict {
-                mapped[k] = mapProperty(v)
-            }
+            for (k, v) in propsDict { mapped[k] = mapRawProperty(v) }
             nestedProperties = mapped
         }
-        
         var items: JSONSchema? = nil
-        if type == .array, let itemDict = dict["items"] as? [String: Any] {
-            items = mapProperty(itemDict)
+        if type == .array, let itemDict = dict["items"] as? [String: Any] { items = mapRawProperty(itemDict) }
+        return JSONSchema(type: type, description: dict["description"] as? String, properties: nestedProperties, items: items, required: dict["required"] as? [String], additionalProperties: type == .object ? false : false, enum: dict["enum"] as? [String])
+    }
+    
+    // MARK: - User Input Handling
+    
+    /// Clear the pending user input request after form is dismissed or submitted
+    func clearPendingUserInputRequest() {
+        pendingUserInputRequest = nil
+    }
+    
+    /// Handle user input response and continue the OAuth flow
+    /// - Parameter response: The user's input response
+    /// - Returns: A formatted string to inject into the conversation
+    func handleUserInputResponse(_ response: UserInputResponse) -> String {
+        clearPendingUserInputRequest()
+        
+        // Format the response as a message the LLM can understand
+        var components: [String] = []
+        components.append("User provided the following information for \(response.provider):")
+        for (field, value) in response.values {
+            components.append("- \(field): \(value)")
+        }
+        if let authConfigId = response.authConfigId {
+            components.append("Auth config ID: \(authConfigId)")
         }
         
-        // Correct initializer order and parameter assignment
-        return JSONSchema(
-            type: type,
-            description: description,
-            properties: nestedProperties,
-            items: items,
-            required: dict["required"] as? [String],
-            additionalProperties: type == .object ? false : false, // Defaulting to false as required by SDK init
-            enum: enumValues
-        )
+        return components.joined(separator: "\n")
+    }
+    
+    // MARK: - Memory Persistence
+    
+    /// Get serialized memory for persistence
+    func getSerializedMemory() -> Data? {
+        try? JSONEncoder().encode(currentMemory)
+    }
+    
+    /// Load memory from persisted data
+    func loadMemory(from data: Data) {
+        if let memory = try? JSONDecoder().decode([String: [String]].self, from: data) {
+            currentMemory = memory
+            logger.info("[NativeChatService] 📦 Loaded \(memory.count) memory entries")
+        }
+    }
+    
+    /// Clear all memory
+    func clearMemory() {
+        currentMemory = [:]
+        logger.info("[NativeChatService] 🧹 Memory cleared")
+    }
+
+    private func executeWithRetry<T>(maxAttempts: Int = 3, operation: @MainActor () async throws -> T) async throws -> T {
+        var lastError: Error?
+        for attempt in 1...maxAttempts {
+            do { return try await operation() }
+            catch {
+                lastError = error
+                if attempt < maxAttempts { try await Task.sleep(nanoseconds: UInt64(pow(2.0, Double(attempt)) * 1_000_000_000)) }
+            }
+        }
+        throw lastError ?? NativeChatError.invalidResponse
+    }
+
+    private func createMetaToolSchemas() -> [ChatCompletionParameters.Tool] {
+        return [
+            .init(
+                function: .init(
+                    name: "COMPOSIO_SEARCH_TOOLS",
+                    strict: nil,
+                    description: "Discover available tools for a use case and get execution guidance with recommended plan steps",
+                    parameters: .init(
+                        type: .object,
+                        properties: [
+                            "queries": .init(
+                                type: .array,
+                                description: "Array of use case queries to search for tools",
+                                items: .init(
+                                    type: .object,
+                                    properties: [
+                                        "use_case": .init(type: .string, description: "The use case to search for (e.g., 'send an email via gmail')")
+                                    ],
+                                    required: ["use_case"]
+                                )
+                            ),
+                            "session_id": .init(type: .string, description: "Session ID from previous SEARCH_TOOLS call (use 'load' for first call)")
+                        ],
+                        required: ["queries"],
+                        additionalProperties: false
+                    )
+                )
+            ),
+            .init(
+                function: .init(
+                    name: "COMPOSIO_MULTI_EXECUTE_TOOL",
+                    strict: nil,
+                    description: "Execute multiple tools in parallel (up to 50). Include memory parameter for context.",
+                    parameters: .init(
+                        type: .object,
+                        properties: [
+                            "tool_calls": .init(
+                                type: .array,
+                                description: "Array of tool calls to execute",
+                                items: .init(
+                                    type: .object,
+                                    properties: [
+                                        "tool_slug": .init(type: .string, description: "The tool slug to execute"),
+                                        "arguments": .init(type: .object, description: "Tool arguments")
+                                    ],
+                                    required: ["tool_slug"]
+                                )
+                            ),
+                            "memory": .init(type: .object, description: "Persistent memory context (app names as keys, arrays of strings as values)"),
+                            "session_id": .init(type: .string, description: "Session ID from SEARCH_TOOLS")
+                        ],
+                        required: ["tool_calls"],
+                        additionalProperties: false
+                    )
+                )
+            ),
+            .init(
+                function: .init(
+                    name: "COMPOSIO_MANAGE_CONNECTIONS",
+                    strict: nil,
+                    description: "Initiate OAuth connections for toolkits. Returns redirect URLs for user authentication.",
+                    parameters: .init(
+                        type: .object,
+                        properties: [
+                            "toolkits": .init(
+                                type: .array,
+                                description: "Array of toolkit slugs to connect (e.g., ['gmail', 'slack'])",
+                                items: .init(type: .string, description: "Toolkit slug")
+                            ),
+                            "session_id": .init(type: .string, description: "Session ID from SEARCH_TOOLS")
+                        ],
+                        required: ["toolkits"],
+                        additionalProperties: false
+                    )
+                )
+            ),
+            // REQUEST_USER_INPUT - for OAuth flows requiring custom parameters
+            .init(
+                function: .init(
+                    name: "REQUEST_USER_INPUT",
+                    strict: nil,
+                    description: "Request custom input fields from the user BEFORE starting OAuth flow. Use ONLY when a service requires additional parameters beyond standard OAuth (e.g., Pipedrive subdomain, Salesforce instance URL). DO NOT use for standard OAuth services like Gmail, Slack, GitHub.",
+                    parameters: .init(
+                        type: .object,
+                        properties: [
+                            "provider": .init(type: .string, description: "Name of the service provider (e.g., 'pipedrive', 'salesforce')"),
+                            "fields": .init(
+                                type: .array,
+                                description: "List of input fields to request from the user",
+                                items: .init(
+                                    type: .object,
+                                    properties: [
+                                        "name": .init(type: .string, description: "Field identifier (e.g., 'subdomain')"),
+                                        "label": .init(type: .string, description: "User-friendly label (e.g., 'Company Subdomain')"),
+                                        "type": .init(type: .string, description: "Input type: 'text', 'url', 'email', 'password', 'number'"),
+                                        "required": .init(type: .boolean, description: "Whether this field is required"),
+                                        "placeholder": .init(type: .string, description: "Placeholder text for the input")
+                                    ],
+                                    required: ["name", "label"]
+                                )
+                            ),
+                            "authConfigId": .init(type: .string, description: "Auth config ID to use after collecting inputs"),
+                            "logoUrl": .init(type: .string, description: "URL to provider logo for display")
+                        ],
+                        required: ["provider", "fields"],
+                        additionalProperties: false
+                    )
+                )
+            )
+        ]
+    }
+}
+
+extension [String: AnyCodable] {
+    var dictionary: [String: Any] { self.mapValues { $0.value } }
+}
+
+extension ToolParameters {
+    var asJSONSchema: JSONSchema {
+        guard let data = try? JSONEncoder().encode(self), let dict = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return JSONSchema(type: .object, additionalProperties: false) }
+        return mapToSchema(dict: dict)
+    }
+    private func mapToSchema(dict: [String: Any]) -> JSONSchema {
+        let properties = dict["properties"] as? [String: [String: Any]] ?? [:]
+        var schemaProperties: [String: JSONSchema] = [:]
+        for (key, propDict) in properties { schemaProperties[key] = mapProperty(propDict) }
+        return JSONSchema(type: .object, properties: schemaProperties.isEmpty ? nil : schemaProperties, required: dict["required"] as? [String], additionalProperties: false)
+    }
+    private func mapProperty(_ dict: [String: Any]) -> JSONSchema {
+        let typeStr = dict["type"] as? String ?? "string"
+        let type: JSONSchemaType
+        switch typeStr.lowercased() {
+        case "string": type = .string
+        case "number": type = .number
+        case "integer": type = .integer
+        case "boolean": type = .boolean
+        case "array": type = .array
+        case "object": type = .object
+        default: type = .string
+        }
+        var nestedProperties: [String: JSONSchema]? = nil
+        if type == .object, let propsDict = dict["properties"] as? [String: [String: Any]] {
+            var mapped: [String: JSONSchema] = [:]
+            for (k, v) in propsDict { mapped[k] = mapProperty(v) }
+            nestedProperties = mapped
+        }
+        var items: JSONSchema? = nil
+        if type == .array, let itemDict = dict["items"] as? [String: Any] { items = mapProperty(itemDict) }
+        return JSONSchema(type: type, description: dict["description"] as? String, properties: nestedProperties, items: items, required: dict["required"] as? [String], additionalProperties: type == .object ? false : false, enum: dict["enum"] as? [String])
     }
 }

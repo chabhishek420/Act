@@ -15,8 +15,10 @@ final class AppwriteConversationService {
     private(set) var isLoading = false
     private var savedMessageIds: Set<String> = [] // Track saved messages to avoid duplicate queries
 
+    var testUserId: String?
+
     private var userId: String? {
-        AuthService.shared.userEmail
+        testUserId ?? AuthService.shared.userEmail
     }
     
     // Realtime subscriptions
@@ -83,7 +85,7 @@ final class AppwriteConversationService {
 
         Task {
             conversationSubscription = try? await realtime.subscribe(channels: [channel]) { response in
-            guard let events = response.events,
+            guard let _ = response.events,
                   let payload = response.payload else { return }
 
             // Filter by userId
@@ -124,9 +126,9 @@ final class AppwriteConversationService {
         defer { isLoading = false }
 
         do {
-            let result = try await databases.listDocuments(
+            let result = try await tablesDB.listRows(
                 databaseId: AppwriteDatabase.databaseId,
-                collectionId: AppwriteDatabase.conversationsCollection,
+                tableId: AppwriteDatabase.conversationsCollection,
                 queries: [
                     Query.equal("userId", value: userId),
                     Query.orderDesc("updatedAt"),
@@ -134,7 +136,7 @@ final class AppwriteConversationService {
                 ]
             )
 
-            conversations = result.documents.compactMap { doc -> ConversationModel? in
+            conversations = result.rows.compactMap { doc -> ConversationModel? in
                 guard let id = doc.data["$id"]?.value as? String,
                       let title = doc.data["title"]?.value as? String else {
                     return nil
@@ -143,11 +145,14 @@ final class AppwriteConversationService {
                 let createdAt = parseDate(doc.data["createdAt"]?.value as? String) ?? Date()
                 let updatedAt = parseDate(doc.data["updatedAt"]?.value as? String) ?? Date()
 
+                let memoryData = (doc.data["memory"]?.value as? String).flatMap { Data(base64Encoded: $0) }
+
                 return ConversationModel(
                     id: id,
                     title: title,
                     createdAt: createdAt,
-                    updatedAt: updatedAt
+                    updatedAt: updatedAt,
+                    memoryData: memoryData
                 )
             }
 
@@ -169,9 +174,9 @@ final class AppwriteConversationService {
         defer { isLoading = false }
 
         do {
-            let result = try await databases.listDocuments(
+            let result = try await tablesDB.listRows(
                 databaseId: AppwriteDatabase.databaseId,
-                collectionId: AppwriteDatabase.conversationsCollection,
+                tableId: AppwriteDatabase.conversationsCollection,
                 queries: [
                     Query.equal("userId", value: userId),
                     Query.search("title", value: query),
@@ -180,7 +185,7 @@ final class AppwriteConversationService {
                 ]
             )
 
-            conversations = result.documents.compactMap { doc -> ConversationModel? in
+            conversations = result.rows.compactMap { doc -> ConversationModel? in
                 guard let id = doc.data["$id"]?.value as? String,
                       let title = doc.data["title"]?.value as? String else {
                     return nil
@@ -189,11 +194,14 @@ final class AppwriteConversationService {
                 let createdAt = parseDate(doc.data["createdAt"]?.value as? String) ?? Date()
                 let updatedAt = parseDate(doc.data["updatedAt"]?.value as? String) ?? Date()
 
+                let memoryData = (doc.data["memory"]?.value as? String).flatMap { Data(base64Encoded: $0) }
+
                 return ConversationModel(
                     id: id,
                     title: title,
                     createdAt: createdAt,
-                    updatedAt: updatedAt
+                    updatedAt: updatedAt,
+                    memoryData: memoryData
                 )
             }
         } catch {
@@ -217,13 +225,13 @@ final class AppwriteConversationService {
                 queries.append(Query.cursorBefore(cursorBeforeId))
             }
             
-            let result = try await databases.listDocuments(
+            let result = try await tablesDB.listRows(
                 databaseId: AppwriteDatabase.databaseId,
-                collectionId: AppwriteDatabase.messagesCollection,
+                tableId: AppwriteDatabase.messagesCollection,
                 queries: queries
             )
 
-            let messages = result.documents.compactMap { doc -> Message? in
+            let messages = result.rows.compactMap { doc -> Message? in
                 guard let id = doc.data["$id"]?.value as? String,
                       let content = doc.data["content"]?.value as? String,
                       let roleStr = doc.data["role"]?.value as? String else {
@@ -259,7 +267,11 @@ final class AppwriteConversationService {
     // MARK: - Save Conversation
 
     @MainActor
-    func saveConversation(id: String? = nil, messages: [Message]) async -> String {
+    func saveConversation(
+        id: String? = nil, 
+        messages: [Message],
+        memory: Data? = nil
+    ) async -> String {
         guard let userId = userId else {
             print("[AppwriteConversationService] No user logged in, cannot save")
             return id ?? UUID().uuidString
@@ -267,6 +279,9 @@ final class AppwriteConversationService {
 
         let conversationId = id ?? UUID().uuidString
         let now = ISO8601DateFormatter().string(from: Date())
+        
+        // Encode memory as base64 string if present
+        let memoryString = memory?.base64EncodedString()
 
         do {
             // Check if conversation exists in DATABASE (not cache) to avoid race conditions
@@ -277,31 +292,42 @@ final class AppwriteConversationService {
                 let firstUserMessage = messages.first(where: { $0.role == .user })?.content ?? "New Chat"
                 let title = ConversationModel.generateTitle(from: firstUserMessage)
 
-                _ = try await databases.createDocument(
+                var data: [String: Any?] = [
+                    "userId": userId,
+                    "title": title,
+                    "createdAt": now,
+                    "updatedAt": now
+                ]
+                
+                if let memoryString = memoryString {
+                    data["memory"] = memoryString
+                }
+
+                _ = try await tablesDB.createRow(
                     databaseId: AppwriteDatabase.databaseId,
-                    collectionId: AppwriteDatabase.conversationsCollection,
-                    documentId: conversationId,
-                    data: [
-                        "userId": userId,
-                        "title": title,
-                        "createdAt": now,
-                        "updatedAt": now
-                    ],
+                    tableId: AppwriteDatabase.conversationsCollection,
+                    rowId: conversationId,
+                    data: data,
                     permissions: [
-                        Permission.read(Role.user(userId)),
-                        Permission.update(Role.user(userId)),
-                        Permission.delete(Role.user(userId))
+                        Permission.read(testUserId != nil ? Role.any() : Role.user(userId)),
+                        Permission.update(testUserId != nil ? Role.any() : Role.user(userId)),
+                        Permission.delete(testUserId != nil ? Role.any() : Role.user(userId))
                     ]
                 )
 
                 print("[AppwriteConversationService] Created conversation: \(conversationId)")
             } else {
-                // Update existing conversation timestamp
-                _ = try await databases.updateDocument(
+                // Update existing conversation timestamp and memory
+                var updateData: [String: Any] = ["updatedAt": now]
+                if let memoryString = memoryString {
+                    updateData["memory"] = memoryString
+                }
+                
+                _ = try await tablesDB.updateRow(
                     databaseId: AppwriteDatabase.databaseId,
-                    collectionId: AppwriteDatabase.conversationsCollection,
-                    documentId: conversationId,
-                    data: ["updatedAt": now]
+                    tableId: AppwriteDatabase.conversationsCollection,
+                    rowId: conversationId,
+                    data: updateData
                 )
             }
 
@@ -310,10 +336,10 @@ final class AppwriteConversationService {
 
             for message in newMessages {
                 do {
-                    _ = try await databases.createDocument(
+                    _ = try await tablesDB.createRow(
                         databaseId: AppwriteDatabase.databaseId,
-                        collectionId: AppwriteDatabase.messagesCollection,
-                        documentId: message.id,
+                        tableId: AppwriteDatabase.messagesCollection,
+                        rowId: message.id,
                         data: [
                             "conversationId": conversationId,
                             "content": message.content,
@@ -323,13 +349,15 @@ final class AppwriteConversationService {
                             "attachments": encodeAttachments(message.attachments)
                         ],
                         permissions: [
-                            Permission.read(Role.user(userId)),
-                            Permission.update(Role.user(userId)),
-                            Permission.delete(Role.user(userId))
+                            Permission.read(testUserId != nil ? Role.any() : Role.user(userId)),
+                            Permission.update(testUserId != nil ? Role.any() : Role.user(userId)),
+                            Permission.delete(testUserId != nil ? Role.any() : Role.user(userId))
                         ]
                     )
+                    print("[AppwriteConversationService] ✅ Created message document: \(message.id)")
                     savedMessageIds.insert(message.id)
                 } catch {
+                    print("[AppwriteConversationService] ❌ Failed to create message \(message.id): \(error.localizedDescription)")
                     // If document already exists, just track it
                     if error.localizedDescription.contains("already exists") || error.localizedDescription.contains("409") {
                         savedMessageIds.insert(message.id)
@@ -338,6 +366,7 @@ final class AppwriteConversationService {
                     }
                 }
             }
+            print("[AppwriteConversationService] ✅ Finished saving \(newMessages.count) new messages")
 
             print("[AppwriteConversationService] Saved \(newMessages.count) new messages")
 
@@ -369,27 +398,27 @@ final class AppwriteConversationService {
     func deleteConversation(_ id: String) async -> Bool {
         do {
             // Delete all messages first
-            let messagesResult = try await databases.listDocuments(
+            let messagesResult = try await tablesDB.listRows(
                 databaseId: AppwriteDatabase.databaseId,
-                collectionId: AppwriteDatabase.messagesCollection,
+                tableId: AppwriteDatabase.messagesCollection,
                 queries: [Query.equal("conversationId", value: id)]
             )
 
-            for doc in messagesResult.documents {
+            for doc in messagesResult.rows {
                 if let docId = doc.data["$id"]?.value as? String {
-                    _ = try await databases.deleteDocument(
+                    _ = try await tablesDB.deleteRow(
                         databaseId: AppwriteDatabase.databaseId,
-                        collectionId: AppwriteDatabase.messagesCollection,
-                        documentId: docId
+                        tableId: AppwriteDatabase.messagesCollection,
+                        rowId: docId
                     )
                 }
             }
 
             // Delete conversation
-            _ = try await databases.deleteDocument(
+            _ = try await tablesDB.deleteRow(
                 databaseId: AppwriteDatabase.databaseId,
-                collectionId: AppwriteDatabase.conversationsCollection,
-                documentId: id
+                tableId: AppwriteDatabase.conversationsCollection,
+                rowId: id
             )
 
             conversations.removeAll { $0.id == id }
@@ -405,10 +434,10 @@ final class AppwriteConversationService {
 
     private func checkConversationExists(conversationId: String) async -> Bool {
         do {
-            _ = try await databases.getDocument(
+            _ = try await tablesDB.getRow(
                 databaseId: AppwriteDatabase.databaseId,
-                collectionId: AppwriteDatabase.conversationsCollection,
-                documentId: conversationId
+                tableId: AppwriteDatabase.conversationsCollection,
+                rowId: conversationId
             )
             return true
         } catch {

@@ -46,8 +46,10 @@ struct ChatView: View {
                         ScrollView {
                             LazyVStack(spacing: 12) {
                                 ForEach(viewModel.messages) { message in
-                                    MessageBubble(message: message)
-                                        .id(message.id)
+                                    MessageBubble(message: message) { failedMessage in
+                                        Task { await viewModel.retryMessage(failedMessage) }
+                                    }
+                                    .id(message.id)
                                 }
 
                                 // Streaming message
@@ -128,7 +130,7 @@ struct ChatView: View {
                         NavigationLink {
                             SystemDiagnosticsView()
                         } label: {
-                            Image(systemName: "gauge.with.dots.needle")
+                            Image(systemName: "gauge.open.with.lines.needle.33percent")
                         }
 
                         Button {
@@ -199,6 +201,32 @@ struct ChatView: View {
                     .animation(.spring(response: 0.3), value: viewModel.showConnectionPrompt)
                 }
             }
+            .overlay {
+                // User input form overlay (REQUEST_USER_INPUT tool)
+                if let request = viewModel.pendingUserInputRequest {
+                    ZStack {
+                        Color.black.opacity(0.4)
+                            .ignoresSafeArea()
+                            .onTapGesture {
+                                viewModel.dismissUserInputRequest()
+                            }
+
+                        UserInputFormView(
+                            request: request,
+                            onSubmit: { response in
+                                Task {
+                                    await viewModel.handleUserInputSubmission(response)
+                                }
+                            },
+                            onDismiss: {
+                                viewModel.dismissUserInputRequest()
+                            }
+                        )
+                        .transition(.scale.combined(with: .opacity))
+                    }
+                    .animation(.spring(response: 0.3), value: viewModel.pendingUserInputRequest?.id)
+                }
+            }
             .task {
                 await viewModel.loadConversations()
             }
@@ -252,6 +280,7 @@ struct WelcomeView: View {
 
 struct MessageBubble: View {
     let message: Message
+    let onRetry: ((Message) -> Void)?
 
     var body: some View {
         HStack(alignment: .top) {
@@ -274,10 +303,35 @@ struct MessageBubble: View {
                         AttachmentView(attachment: attachment)
                     }
                 }
+                
+                // Failure indicator and retry button
+                if message.isFailed {
+                    HStack {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundStyle(.red)
+                            .font(.caption)
+                        
+                        Text(message.failureReason ?? "Failed to send")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        
+                        Spacer()
+                        
+                        Button {
+                            onRetry?(message)
+                        } label: {
+                            Label("Retry", systemImage: "arrow.clockwise")
+                                .font(.caption)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(.blue)
+                    }
+                    .padding(.top, 4)
+                }
             }
             .padding(12)
-            .background(message.role == .user ? Color.blue : Color(.systemGray6))
-            .foregroundColor(message.role == .user ? .white : .primary)
+            .background(message.isFailed ? Color.red.opacity(0.1) : (message.role == .user ? Color.blue : Color(.systemGray6)))
+            .foregroundColor(message.role == .user && !message.isFailed ? .white : .primary)
             .clipShape(RoundedRectangle(cornerRadius: 16))
 
             if message.role == .assistant { Spacer(minLength: 60) }
@@ -581,7 +635,7 @@ struct ConversationSidebar: View {
                             onSelect(conversation.id)
                         } label: {
                             VStack(alignment: .leading) {
-                                Text(conversation.title ?? "Untitled")
+                                Text(conversation.title)
                                     .lineLimit(1)
                                 Text(conversation.updatedAt, style: .relative)
                                     .font(.caption)

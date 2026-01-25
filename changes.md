@@ -247,3 +247,109 @@ If tools aren't appearing:
 1. **Always sanitize** tool outputs before JSONSerialization
 2. **Always map** tool names bidirectionally (sanitized ↔ original)
 3. **Always log** at key pipeline steps (fetch, sanitize, execute, recurse)
+---
+
+## Session: 2026-01-24 (Prompt Optimization & Appwrite Migration)
+
+### Change #7: iOS-Optimized System Prompt
+**Date**: 2026-01-24 15:30 IST  
+**Complexity**: 6/10  
+**Files Modified**:
+- `Rube-ios/Services/NativeChatService.swift`
+
+**Summary**:
+Implemented a comprehensive, XML-structured system prompt (~2,350 tokens) optimized for mobile performance and verified Tool Router capabilities.
+
+**Details**:
+- Used XML tags (`<role>`, `<context>`, `<security>`) for better model instruction adherence.
+- Removed ~800 tokens of non-available "Recipe" instructions.
+- Added iOS platform constraints (latency, battery, background limits).
+- Integrated dynamic execution modes (YOLO vs. Safe) based on user settings.
+- Explicitly documented the Memory Storage format for tool calling.
+
+**Why This Change**:
+The previous prompt was based on the web version, which included many features not supported in the Tool Router mobile SDK. This optimization reduces token usage and improves instruction following.
+
+---
+
+### Change #8: Appwrite TablesDB Migration
+**Date**: 2026-01-24 15:45 IST  
+**Complexity**: 5/10  
+**Files Modified**:
+- `Rube-ios/Lib/AppwriteClient.swift`
+- `Rube-ios/Services/AppwriteConversationService.swift`
+
+**Summary**:
+Migrated all database operations from the deprecated `Databases` service to the new `TablesDB` service introduced in Appwrite 1.8.0.
+
+**Details**:
+- Replaced `Databases` with `TablesDB`.
+- Updated methods: `listDocuments` → `listRows`, `createDocument` → `createRow`, etc.
+- Updated parameters: `collectionId` → `tableId`, `documentId` → `rowId`.
+- Updated response handling: `.documents` → `.rows`.
+
+**Why This Change**:
+The previous API was generating multiple deprecation warnings and would eventually break in future SDK updates.
+
+---
+
+### Change #9: Swift 6 Concurrency & Actor Fixes
+**Date**: 2026-01-24 15:50 IST  
+**Complexity**: 4/10  
+**Files Modified**:
+- `Rube-ios/Services/ComposioConnectionService.swift`
+
+**Summary**:
+Resolved Swift 6 "Actor-isolated property" errors by enforcing proper MainActor synchronization.
+
+**Details**:
+- Marked `ComposioConnectionService` as `@MainActor`.
+- Ensured thread-safe access to global singletons from nonisolated contexts.
+
+**Why This Change**:
+Necessary for Swift 6 language mode compatibility and to prevent race conditions when updating UI-bound state.
+
+---
+
+### Change #10: Multi-Orientation Support
+**Date**: 2026-01-24 15:55 IST  
+**Complexity**: 2/10  
+**Files Modified**:
+- `Rube-ios/Info.plist`
+
+**Summary**:
+Enabled all interface orientations for iPhone and iPad.
+
+**Details**:
+- Added `UISupportedInterfaceOrientations` for Portrait, Portrait Upside Down, and Landscape modes.
+
+**Why This Change**:
+Ensures a premium, native feel where the app adapts to however the user holds their device.
+
+---
+
+## Test Results
+
+### Unit Tests: ✅ PASSING
+### Live Integration Tests: ✅ PASSING
+- Tool Router Verification: ✅
+- Appwrite Row Retrieval: ✅
+
+## Build Status
+
+**Target**: iPhone (Physical Device) ✅ SUCCESS  
+**Platform**: iOS 17.2+  
+**Xcode Version**: 15.x  
+
+---
+
+## Next Session Priorities
+
+1. Implement persistent Memory Storage (save `currentMemory` to Appwrite/SwiftData).
+2. Enhance UI with tool execution progress indicators.
+3. Add in-app authentication flow for missing tool connections.
+4. Finalize OAuth callback URL handling.
+
+---
+
+**End of Changes Log**

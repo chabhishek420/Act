@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "composio": {
+      "command": "node",
+      "args": [
+        "/Users/roshansharma/Desktop/Vscode/Rube-ios-backup-2026-01-17/Rube-ios/.temp/composio-mcp-server/build/index.js"
+      ],
+      "env": {
+        "COMPOSIO_API_KEY": "ak_zADvaco59jaMiHrqpjj4",
+        "COMPOSIO_APPS": "gmail,linear"
+      }
+    }
+  }
+}

@@ -13,7 +13,7 @@ let client = Client()
     .setProject("6961fcac000432c6a72a")
 
 let account = Account(client)
-let databases = Databases(client)
+let tablesDB = TablesDB(client)
 let realtime = Realtime(client)
 
 // Database and Collection IDs

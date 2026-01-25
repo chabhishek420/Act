@@ -8,6 +8,9 @@ struct SystemDiagnosticsView: View {
     @State private var selectedModel: String = ComposioConfig.llmModel
     @State private var isFetchingModels = false
     
+    // Execution Mode
+    @ObservedObject private var executionModeSettings = ExecutionModeSettings.shared
+    
     // Composio Diagnostics
     @State private var composioStatus: String = "Unknown"
     @State private var userEmail: String = "Not Logged In"
@@ -19,6 +22,27 @@ struct SystemDiagnosticsView: View {
     
     var body: some View {
         Form {
+            // MARK: - Execution Mode
+            Section {
+                Picker("Mode", selection: $executionModeSettings.currentMode) {
+                    ForEach(ExecutionMode.allCases, id: \.self) { mode in
+                        Text(mode.displayName).tag(mode)
+                    }
+                }
+                .pickerStyle(.segmented)
+                
+                Text(executionModeSettings.currentMode.description)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            } header: {
+                Text("Execution Mode")
+            } footer: {
+                if executionModeSettings.currentMode == .yolo {
+                    Text("⚠️ YOLO mode will send emails and make changes without asking!")
+                        .foregroundColor(.orange)
+                }
+            }
+            
             Section("Pipeline Connectivity") {
                 HStack {
                     Text("LLM Endpoint")

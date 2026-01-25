@@ -12,8 +12,11 @@ struct Message: Identifiable, Equatable {
     let content: String
     let role: MessageRole
     let timestamp: Date
+    var toolCallID: String?
     var toolCalls: [ToolCall]?
     var attachments: [Attachment]?
+    var isFailed: Bool = false
+    var failureReason: String?
 
     init(
         id: String = UUID().uuidString,
@@ -21,14 +24,20 @@ struct Message: Identifiable, Equatable {
         role: MessageRole,
         timestamp: Date = Date(),
         toolCalls: [ToolCall]? = nil,
-        attachments: [Attachment]? = nil
+        toolCallID: String? = nil,
+        attachments: [Attachment]? = nil,
+        isFailed: Bool = false,
+        failureReason: String? = nil
     ) {
         self.id = id
         self.content = content
         self.role = role
         self.timestamp = timestamp
         self.toolCalls = toolCalls
+        self.toolCallID = toolCallID
         self.attachments = attachments
+        self.isFailed = isFailed
+        self.failureReason = failureReason
     }
 
     static func == (lhs: Message, rhs: Message) -> Bool {
@@ -40,6 +49,7 @@ enum MessageRole: String, Codable {
     case user
     case assistant
     case system
+    case tool
 }
 
 struct ToolCall: Identifiable, Equatable {

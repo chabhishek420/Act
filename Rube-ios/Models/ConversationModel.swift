@@ -18,18 +18,22 @@ final class ConversationModel {
     @Relationship(deleteRule: .cascade, inverse: \MessageModel.conversation)
     var messages: [MessageModel]
     
+    var memoryData: Data?
+    
     init(
         id: String = UUID().uuidString,
         title: String,
         createdAt: Date = Date(),
         updatedAt: Date = Date(),
-        messages: [MessageModel] = []
+        messages: [MessageModel] = [],
+        memoryData: Data? = nil
     ) {
         self.id = id
         self.title = title
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.messages = messages
+        self.memoryData = memoryData
     }
     
     /// Generate a title from the first user message

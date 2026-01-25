@@ -16,7 +16,7 @@ packages:
     from: 4.4.8
   Composio:
     url: https://github.com/chabhishek420/composio-swifft
-    branch: main
+    revision: 09e637f81227c040932b9d339ebea6538cd4b1d9
   OpenAI:
     url: https://github.com/MacPaw/OpenAI.git
     from: 0.4.7

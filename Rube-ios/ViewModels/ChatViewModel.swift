@@ -32,6 +32,7 @@ final class ChatViewModel {
     var streamingContent: String { nativeChatService.streamingContent }
     var streamingToolCalls: [ToolCall] { nativeChatService.streamingToolCalls }
     var isStreaming: Bool { nativeChatService.isStreaming }
+    var pendingUserInputRequest: UserInputRequest? { nativeChatService.pendingUserInputRequest }
 
     // Conversations
     var conversations: [ConversationModel] { conversationService.conversations }
@@ -85,10 +86,11 @@ final class ChatViewModel {
             print("[ChatViewModel] ✅ Received assistant message")
             messages.append(assistantMessage)
 
-            // Save conversation to AppWrite
+            // Save conversation to AppWrite with memory
             currentConversationId = await conversationService.saveConversation(
                 id: currentConversationId,
-                messages: messages
+                messages: messages,
+                memory: nativeChatService.getSerializedMemory()
             )
             await loadConversations()
         } catch let error as NSError {
@@ -128,14 +130,36 @@ final class ChatViewModel {
             }
 
             errorMessage = friendlyMessage
-            messages.append(Message(
-                content: "❌ \(friendlyMessage)",
-                role: .assistant
-            ))
+            
+            // Mark the last user message as failed
+            if let lastMessage = messages.last, lastMessage.role == .user {
+                messages.removeLast()
+                var failedMessage = lastMessage
+                failedMessage.isFailed = true
+                failedMessage.failureReason = friendlyMessage
+                messages.append(failedMessage)
+            }
         }
 
         isLoading = false
         print("[ChatViewModel] ✅ Send message complete")
+    }
+    
+    // MARK: - Retry Failed Message
+    
+    @MainActor
+    func retryMessage(_ message: Message) async {
+        guard message.isFailed else { return }
+        
+        // Remove the failed message
+        messages.removeAll { $0.id == message.id }
+        
+        // Re-send with original content
+        inputText = message.content
+        if let attachments = message.attachments {
+            pendingAttachments = attachments
+        }
+        await sendMessage()
     }
 
     // MARK: - Load Conversation
@@ -145,6 +169,14 @@ final class ChatViewModel {
         currentConversationId = id
         conversationService.clearMessageCache()
         messages = await conversationService.getMessages(conversationId: id)
+        
+        // Load memory if available
+        if let conversation = conversations.first(where: { $0.id == id }),
+           let memoryData = conversation.memoryData {
+            nativeChatService.loadMemory(from: memoryData)
+        } else {
+            nativeChatService.clearMemory()
+        }
         
         // Subscribe to real-time message updates
         conversationService.subscribeToMessages(conversationId: id) { [weak self] newMessage in
@@ -178,6 +210,7 @@ final class ChatViewModel {
         messages = []
         inputText = ""
         errorMessage = nil
+        nativeChatService.clearMemory()
     }
 
     // MARK: - Load Conversations
@@ -264,5 +297,54 @@ final class ChatViewModel {
     func dismissConnectionRequest() {
         showConnectionPrompt = false
         pendingConnectionRequest = nil
+    }
+    
+    // MARK: - User Input Handling (REQUEST_USER_INPUT tool)
+    
+    @MainActor
+    func handleUserInputSubmission(_ response: UserInputResponse) async {
+        // Format the response as a user message
+        let responseText = nativeChatService.handleUserInputResponse(response)
+        
+        // Add the response to the conversation
+        let userMessage = Message(
+            content: responseText,
+            role: .user
+        )
+        messages.append(userMessage)
+        
+        // Continue the conversation with the user's input
+        do {
+            let assistantResponse = try await nativeChatService.sendMessage(
+                responseText,
+                messages: messages,
+                conversationId: currentConversationId,
+                onNewConversationId: { [weak self] newId in
+                    self?.currentConversationId = newId
+                }
+            )
+            messages.append(assistantResponse)
+            
+            // Save conversation with memory
+            currentConversationId = await conversationService.saveConversation(
+                id: currentConversationId,
+                messages: messages,
+                memory: nativeChatService.getSerializedMemory()
+            )
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+    
+    @MainActor
+    func dismissUserInputRequest() {
+        nativeChatService.clearPendingUserInputRequest()
+        
+        // Optionally add a message indicating the user cancelled
+        let cancelMessage = Message(
+            content: "Connection cancelled.",
+            role: .assistant
+        )
+        messages.append(cancelMessage)
     }
 }
