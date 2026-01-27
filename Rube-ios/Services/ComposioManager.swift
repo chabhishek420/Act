@@ -33,6 +33,12 @@ final class ComposioManager {
     private var currentSession: ToolRouterSession?
     private var sessionUserId: String?
 
+    /// Session cache: Maps (userId + conversationId) → (session, expiresAt)
+    private var sessionCache = [String: (session: ToolRouterSession, expiresAt: Date)]()
+
+    /// Session cache TTL (30 minutes)
+    private let sessionCacheTTL: TimeInterval = 30 * 60
+
     /// Current session ID if active
     var sessionId: String? { currentSession?.sessionId }
 
@@ -77,16 +83,16 @@ final class ComposioManager {
     private func cleanupExpiredSessions() {
         let defaults = UserDefaults.standard
         let allKeys = defaults.dictionaryRepresentation().keys
-        
+
         // Find all session keys
         let sessionKeys = allKeys.filter { $0.hasPrefix("composio_session_v2_") }
         var cleanedCount = 0
-        
+
         for key in sessionKeys {
             // Construct the corresponding time key
             let userId = key.replacingOccurrences(of: "composio_session_v2_", with: "")
             let timeKey = "composio_session_time_\(userId)"
-            
+
             // Check if session is expired (1 hour TTL)
             if let timestamp = defaults.object(forKey: timeKey) as? Date,
                Date().timeIntervalSince(timestamp) > 3600 {
@@ -99,45 +105,74 @@ final class ComposioManager {
                 cleanedCount += 1
             }
         }
-        
+
         if cleanedCount > 0 {
             logger.info("[ComposioManager] 🧹 Cleaned up \(cleanedCount) expired session(s)")
+        }
+
+        // Clean up expired memory cache
+        cleanupExpiredSessionCache()
+    }
+
+    /// Cleans up expired sessions from memory cache
+    private func cleanupExpiredSessionCache() {
+        let now = Date()
+        let expiredKeys = sessionCache.filter { $0.value.expiresAt <= now }.keys
+
+        for key in expiredKeys {
+            sessionCache.removeValue(forKey: key)
+            logger.debug("[ComposioManager] 🧹 Cleaned up expired session cache: \(key)")
         }
     }
     
     // MARK: - Session Management
     
-    /// Creates or returns existing Tool Router session for a user
-    /// - Parameter userId: User identifier (typically email)
+    /// Creates or returns existing Tool Router session for a user and conversation
+    /// Implements session-based architecture from open-rube pattern
+    /// - Parameters:
+    ///   - userId: User identifier (typically email)
+    ///   - conversationId: Conversation identifier for isolation
     /// - Returns: Active ToolRouterSession
-    func getSession(for userId: String) async throws -> ToolRouterSession {
-        // 1. Check in-memory cache
-        if let session = currentSession, sessionUserId == userId {
-            return session
+    func getSession(for userId: String, conversationId: String) async throws -> ToolRouterSession {
+        let sessionKey = "\(userId)||\(conversationId)" // Compound key for user+conversation isolation
+
+        // 1. Check in-memory cache with TTL
+        if let cached = sessionCache[sessionKey],
+           cached.expiresAt > Date() {
+            logger.debug("[ComposioManager] ♻️ Reusing cached session: \(cached.session.sessionId)")
+            self.currentSession = cached.session
+            self.sessionUserId = userId
+            return cached.session
         }
 
-        // 2. Check UserDefaults cache
-        let cacheKey = "composio_session_v2_\(userId.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? userId)"
-        let timeKey = "composio_session_time_\(userId.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? userId)"
+        // 2. Check UserDefaults cache (fallback for longer-term persistence)
+        let cacheKey = "composio_session_v2_\(sessionKey.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? sessionKey)"
+        let timeKey = "composio_session_time_\(sessionKey.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? sessionKey)"
 
         if let data = UserDefaults.standard.data(forKey: cacheKey),
            let timestamp = UserDefaults.standard.object(forKey: timeKey) as? Date,
-           Date().timeIntervalSince(timestamp) < 3600 { // 1 hour TTL
+           Date().timeIntervalSince(timestamp) < 3600 { // 1 hour TTL for UserDefaults
 
             do {
                 let session = try JSONDecoder().decode(ToolRouterSession.self, from: data)
-                logger.info("[ComposioManager] ♻️ Reusing cached Tool Router session: \(session.sessionId)")
+                logger.info("[ComposioManager] ♻️ Reusing persisted Tool Router session: \(session.sessionId)")
+
+                // Update memory cache
+                let expiresAt = Date().addingTimeInterval(sessionCacheTTL)
+                sessionCache[sessionKey] = (session, expiresAt)
+
                 self.currentSession = session
                 self.sessionUserId = userId
                 return session
             } catch {
-                logger.info("[ComposioManager] ⚠️ Failed to decode cached session: \(error)")
+                logger.info("[ComposioManager] ⚠️ Failed to decode persisted session: \(error)")
                 UserDefaults.standard.removeObject(forKey: cacheKey)
+                UserDefaults.standard.removeObject(forKey: timeKey)
             }
         }
 
         // 3. Create new session with retry logic
-        logger.info("[ComposioManager] 🆕 Creating new Tool Router session for: \(userId)")
+        logger.info("[ComposioManager] 🆕 Creating new Tool Router session for user: \(userId), conversation: \(conversationId)")
 
         let composio = try getComposio()
         let session = try await NetworkRetry.execute(policy: .default) {
@@ -151,6 +186,11 @@ final class ComposioManager {
         self.currentSession = session
         self.sessionUserId = userId
 
+        // Memory cache
+        let expiresAt = Date().addingTimeInterval(sessionCacheTTL)
+        sessionCache[sessionKey] = (session, expiresAt)
+
+        // UserDefaults cache
         if let data = try? JSONEncoder().encode(session) {
             UserDefaults.standard.set(data, forKey: cacheKey)
             UserDefaults.standard.set(Date(), forKey: timeKey)
@@ -163,12 +203,50 @@ final class ComposioManager {
     /// Clears the current session and persistent cache
     func clearSession() {
         if let userId = sessionUserId {
-            UserDefaults.standard.removeObject(forKey: "composio_session_\(userId)")
-            UserDefaults.standard.removeObject(forKey: "composio_session_time_\(userId)")
+            // Clear all sessions for this user from memory cache
+            let userKeys = sessionCache.keys.filter { $0.hasPrefix("\(userId)||") }
+            for key in userKeys {
+                sessionCache.removeValue(forKey: key)
+            }
+
+            // Clear persisted sessions for this user
+            let defaults = UserDefaults.standard
+            let allKeys = defaults.dictionaryRepresentation().keys
+            let userSessionKeys = allKeys.filter { $0.hasPrefix("composio_session_v2_") && $0.contains(userId) }
+
+            for key in userSessionKeys {
+                defaults.removeObject(forKey: key)
+                let timeKey = key.replacingOccurrences(of: "composio_session_v2_", with: "composio_session_time_")
+                defaults.removeObject(forKey: timeKey)
+            }
         }
+
         currentSession = nil
         sessionUserId = nil
-        logger.info("[ComposioManager] Session cleared")
+        logger.info("[ComposioManager] All sessions cleared for user")
+    }
+
+    /// Clears session for a specific user and conversation
+    func clearSession(for userId: String, conversationId: String) {
+        let sessionKey = "\(userId)||\(conversationId)"
+
+        // Clear memory cache
+        sessionCache.removeValue(forKey: sessionKey)
+
+        // Clear UserDefaults cache
+        let cacheKey = "composio_session_v2_\(sessionKey.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? sessionKey)"
+        let timeKey = "composio_session_time_\(sessionKey.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? sessionKey)"
+
+        UserDefaults.standard.removeObject(forKey: cacheKey)
+        UserDefaults.standard.removeObject(forKey: timeKey)
+
+        // Clear current session if it matches
+        if currentSession != nil && sessionUserId == userId {
+            currentSession = nil
+            sessionUserId = nil
+        }
+
+        logger.info("[ComposioManager] Session cleared for user: \(userId), conversation: \(conversationId)")
     }
     
     // MARK: - Connected Accounts

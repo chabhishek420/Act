@@ -1,0 +1,4 @@
+module AppwriteEnums {
+header "AppwriteEnums-Swift.h"
+export *
+}

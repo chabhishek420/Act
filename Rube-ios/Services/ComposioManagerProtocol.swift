@@ -35,7 +35,7 @@ protocol ComposioManagerProtocol: Sendable {
     
     // MARK: - Tool Router
     
-    func getSession(for userId: String) async throws -> ToolRouterSession
+    func getSession(for userId: String, conversationId: String) async throws -> ToolRouterSession
     
     func getMetaTools(sessionId: String) async throws -> [Tool]
     

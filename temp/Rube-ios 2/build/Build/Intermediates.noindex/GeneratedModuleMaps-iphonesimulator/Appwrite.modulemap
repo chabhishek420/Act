@@ -1,0 +1,4 @@
+module Appwrite {
+header "Appwrite-Swift.h"
+export *
+}

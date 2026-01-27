@@ -1,0 +1,4 @@
+module CNIODarwin {
+umbrella header "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/swift-nio/Sources/CNIODarwin/include/CNIODarwin.h"
+export *
+}

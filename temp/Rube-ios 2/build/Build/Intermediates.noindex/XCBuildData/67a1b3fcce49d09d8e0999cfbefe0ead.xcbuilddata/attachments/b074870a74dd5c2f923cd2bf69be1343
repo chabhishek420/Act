@@ -1,0 +1,4 @@
+module JSONCodable {
+header "JSONCodable-Swift.h"
+export *
+}

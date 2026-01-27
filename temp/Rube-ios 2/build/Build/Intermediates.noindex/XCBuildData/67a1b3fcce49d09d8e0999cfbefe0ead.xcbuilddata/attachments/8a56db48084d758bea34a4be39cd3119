@@ -1,0 +1,4 @@
+module CAsyncHTTPClient {
+umbrella header "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/async-http-client/Sources/CAsyncHTTPClient/include/CAsyncHTTPClient.h"
+export *
+}

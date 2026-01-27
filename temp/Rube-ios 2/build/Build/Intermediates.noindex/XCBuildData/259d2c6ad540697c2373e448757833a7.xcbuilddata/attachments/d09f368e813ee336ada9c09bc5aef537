@@ -1,0 +1,149 @@
+{
+  "" : {
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/AppwriteEnums-primary.dia",
+    "emit-module-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/AppwriteEnums-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/AppwriteEnums-primary-emit-module.dia",
+    "pch" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/AppwriteEnums-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/AppwriteEnums-primary.swiftdeps"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/sdk-for-apple/Sources/AppwriteEnums/AuthenticationFactor.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/AuthenticationFactor.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/AuthenticationFactor.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/AuthenticationFactor.dia",
+    "index-unit-output-path" : "/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/AuthenticationFactor.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/AuthenticationFactor.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/AuthenticationFactor.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/AuthenticationFactor.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/AuthenticationFactor~partial.swiftmodule"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/sdk-for-apple/Sources/AppwriteEnums/AuthenticatorType.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/AuthenticatorType.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/AuthenticatorType.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/AuthenticatorType.dia",
+    "index-unit-output-path" : "/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/AuthenticatorType.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/AuthenticatorType.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/AuthenticatorType.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/AuthenticatorType.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/AuthenticatorType~partial.swiftmodule"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/sdk-for-apple/Sources/AppwriteEnums/Browser.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Browser.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Browser.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Browser.dia",
+    "index-unit-output-path" : "/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Browser.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Browser.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Browser.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Browser.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Browser~partial.swiftmodule"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/sdk-for-apple/Sources/AppwriteEnums/CreditCard.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/CreditCard.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/CreditCard.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/CreditCard.dia",
+    "index-unit-output-path" : "/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/CreditCard.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/CreditCard.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/CreditCard.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/CreditCard.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/CreditCard~partial.swiftmodule"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/sdk-for-apple/Sources/AppwriteEnums/ExecutionMethod.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionMethod.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionMethod.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionMethod.dia",
+    "index-unit-output-path" : "/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionMethod.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionMethod.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionMethod.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionMethod.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionMethod~partial.swiftmodule"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/sdk-for-apple/Sources/AppwriteEnums/ExecutionStatus.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionStatus.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionStatus.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionStatus.dia",
+    "index-unit-output-path" : "/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionStatus.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionStatus.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionStatus.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionStatus.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionStatus~partial.swiftmodule"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/sdk-for-apple/Sources/AppwriteEnums/ExecutionTrigger.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionTrigger.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionTrigger.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionTrigger.dia",
+    "index-unit-output-path" : "/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionTrigger.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionTrigger.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionTrigger.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionTrigger.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ExecutionTrigger~partial.swiftmodule"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/sdk-for-apple/Sources/AppwriteEnums/Flag.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Flag.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Flag.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Flag.dia",
+    "index-unit-output-path" : "/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Flag.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Flag.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Flag.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Flag.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Flag~partial.swiftmodule"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/sdk-for-apple/Sources/AppwriteEnums/ImageFormat.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ImageFormat.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ImageFormat.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ImageFormat.dia",
+    "index-unit-output-path" : "/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ImageFormat.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ImageFormat.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ImageFormat.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ImageFormat.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ImageFormat~partial.swiftmodule"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/sdk-for-apple/Sources/AppwriteEnums/ImageGravity.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ImageGravity.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ImageGravity.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ImageGravity.dia",
+    "index-unit-output-path" : "/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ImageGravity.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ImageGravity.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ImageGravity.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ImageGravity.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/ImageGravity~partial.swiftmodule"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/sdk-for-apple/Sources/AppwriteEnums/OAuthProvider.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/OAuthProvider.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/OAuthProvider.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/OAuthProvider.dia",
+    "index-unit-output-path" : "/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/OAuthProvider.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/OAuthProvider.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/OAuthProvider.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/OAuthProvider.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/OAuthProvider~partial.swiftmodule"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/sdk-for-apple/Sources/AppwriteEnums/Output.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Output.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Output.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Output.dia",
+    "index-unit-output-path" : "/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Output.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Output.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Output.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Output.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Output~partial.swiftmodule"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/sdk-for-apple/Sources/AppwriteEnums/Theme.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Theme.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Theme.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Theme.dia",
+    "index-unit-output-path" : "/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Theme.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Theme.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Theme.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Theme.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Theme~partial.swiftmodule"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/sdk-for-apple/Sources/AppwriteEnums/Timezone.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Timezone.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Timezone.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Timezone.dia",
+    "index-unit-output-path" : "/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Timezone.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Timezone.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Timezone.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Timezone.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/AppwriteEnums.build/Objects-normal/x86_64/Timezone~partial.swiftmodule"
+  }
+}

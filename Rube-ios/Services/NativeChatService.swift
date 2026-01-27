@@ -92,7 +92,8 @@ final class NativeChatService {
         defer { self.isStreaming = false }
 
         let userId = AuthService.shared.userEmail ?? "default_user"
-        let session = try await composioManager.getSession(for: userId)
+        let effectiveConversationId = conversationId ?? "default_conversation"
+        let session = try await composioManager.getSession(for: userId, conversationId: effectiveConversationId)
         let sessionId = session.sessionId
 
         // Skip fetching tools from API (causes "resource exceeds maximum size" error with 500+ tools)

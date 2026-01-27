@@ -1,0 +1,69 @@
+{
+  "" : {
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/NIOHTTPCompression-primary.dia",
+    "emit-module-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/NIOHTTPCompression-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/NIOHTTPCompression-primary-emit-module.dia",
+    "pch" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/NIOHTTPCompression-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/NIOHTTPCompression-primary.swiftdeps"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/swift-nio-extras/Sources/NIOHTTPCompression/HTTPCompression.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPCompression.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPCompression.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPCompression.dia",
+    "index-unit-output-path" : "/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPCompression.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPCompression.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPCompression.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPCompression.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPCompression~partial.swiftmodule"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/swift-nio-extras/Sources/NIOHTTPCompression/HTTPDecompression.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPDecompression.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPDecompression.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPDecompression.dia",
+    "index-unit-output-path" : "/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPDecompression.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPDecompression.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPDecompression.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPDecompression.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPDecompression~partial.swiftmodule"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/swift-nio-extras/Sources/NIOHTTPCompression/HTTPRequestCompressor.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPRequestCompressor.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPRequestCompressor.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPRequestCompressor.dia",
+    "index-unit-output-path" : "/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPRequestCompressor.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPRequestCompressor.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPRequestCompressor.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPRequestCompressor.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPRequestCompressor~partial.swiftmodule"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/swift-nio-extras/Sources/NIOHTTPCompression/HTTPRequestDecompressor.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPRequestDecompressor.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPRequestDecompressor.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPRequestDecompressor.dia",
+    "index-unit-output-path" : "/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPRequestDecompressor.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPRequestDecompressor.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPRequestDecompressor.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPRequestDecompressor.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPRequestDecompressor~partial.swiftmodule"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/swift-nio-extras/Sources/NIOHTTPCompression/HTTPResponseCompressor.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPResponseCompressor.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPResponseCompressor.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPResponseCompressor.dia",
+    "index-unit-output-path" : "/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPResponseCompressor.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPResponseCompressor.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPResponseCompressor.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPResponseCompressor.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPResponseCompressor~partial.swiftmodule"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/swift-nio-extras/Sources/NIOHTTPCompression/HTTPResponseDecompressor.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPResponseDecompressor.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPResponseDecompressor.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPResponseDecompressor.dia",
+    "index-unit-output-path" : "/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPResponseDecompressor.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPResponseDecompressor.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPResponseDecompressor.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPResponseDecompressor.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-nio-extras.build/Debug-iphonesimulator/NIOHTTPCompression.build/Objects-normal/arm64/HTTPResponseDecompressor~partial.swiftmodule"
+  }
+}

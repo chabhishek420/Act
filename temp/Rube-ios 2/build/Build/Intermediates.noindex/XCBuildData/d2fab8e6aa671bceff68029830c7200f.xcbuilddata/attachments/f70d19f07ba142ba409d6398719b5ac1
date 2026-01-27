@@ -1,0 +1,4 @@
+module AppwriteModels {
+header "AppwriteModels-Swift.h"
+export *
+}

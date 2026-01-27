@@ -16,7 +16,7 @@ final class ToolRouterIntegrationTests: XCTestCase {
         let userId = "ios_e2e_test_user"
         
         // 1. Create Session
-        let session = try await composioManager.getSession(for: userId)
+        let session = try await composioManager.getSession(for: userId, conversationId: "test_conversation")
         XCTAssertFalse(session.sessionId.isEmpty)
         print("✅ Session Created: \(session.sessionId)")
         

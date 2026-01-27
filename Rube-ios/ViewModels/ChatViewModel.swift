@@ -150,15 +150,43 @@ final class ChatViewModel {
     @MainActor
     func retryMessage(_ message: Message) async {
         guard message.isFailed else { return }
-        
+
         // Remove the failed message
         messages.removeAll { $0.id == message.id }
-        
+
         // Re-send with original content
         inputText = message.content
         if let attachments = message.attachments {
             pendingAttachments = attachments
         }
+        await sendMessage()
+    }
+
+    // MARK: - Regenerate Message
+
+    @MainActor
+    func regenerateMessage(_ message: Message) async {
+        guard message.role == .assistant else { return }
+
+        // Find the index of the assistant message to regenerate
+        guard let assistantIndex = messages.firstIndex(where: { $0.id == message.id }) else { return }
+
+        // Find the last user message BEFORE this assistant message (search only in 0..<assistantIndex)
+        guard let userIndex = (0..<assistantIndex).last(where: { messages[$0].role == .user }) else { return }
+
+        // Capture user message content and attachments before modifying the array
+        let userContent = messages[userIndex].content
+        let userAttachments = messages[userIndex].attachments ?? []
+
+        // Remove the assistant message and everything after it
+        messages.removeSubrange(assistantIndex..<messages.count)
+
+        // Remove the user message (sendMessage will add it again)
+        messages.remove(at: userIndex)
+
+        // Re-send the user message
+        inputText = userContent
+        pendingAttachments = userAttachments
         await sendMessage()
     }
 

@@ -1,0 +1,29 @@
+{
+  "" : {
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-service-context.build/Debug-iphonesimulator/ServiceContextModule.build/Objects-normal/x86_64/ServiceContextModule-primary.dia",
+    "emit-module-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-service-context.build/Debug-iphonesimulator/ServiceContextModule.build/Objects-normal/x86_64/ServiceContextModule-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-service-context.build/Debug-iphonesimulator/ServiceContextModule.build/Objects-normal/x86_64/ServiceContextModule-primary-emit-module.dia",
+    "pch" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-service-context.build/Debug-iphonesimulator/ServiceContextModule.build/Objects-normal/x86_64/ServiceContextModule-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-service-context.build/Debug-iphonesimulator/ServiceContextModule.build/Objects-normal/x86_64/ServiceContextModule-primary.swiftdeps"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/swift-service-context/Sources/ServiceContextModule/ServiceContext.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-service-context.build/Debug-iphonesimulator/ServiceContextModule.build/Objects-normal/x86_64/ServiceContext.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-service-context.build/Debug-iphonesimulator/ServiceContextModule.build/Objects-normal/x86_64/ServiceContext.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-service-context.build/Debug-iphonesimulator/ServiceContextModule.build/Objects-normal/x86_64/ServiceContext.dia",
+    "index-unit-output-path" : "/swift-service-context.build/Debug-iphonesimulator/ServiceContextModule.build/Objects-normal/x86_64/ServiceContext.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-service-context.build/Debug-iphonesimulator/ServiceContextModule.build/Objects-normal/x86_64/ServiceContext.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-service-context.build/Debug-iphonesimulator/ServiceContextModule.build/Objects-normal/x86_64/ServiceContext.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-service-context.build/Debug-iphonesimulator/ServiceContextModule.build/Objects-normal/x86_64/ServiceContext.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-service-context.build/Debug-iphonesimulator/ServiceContextModule.build/Objects-normal/x86_64/ServiceContext~partial.swiftmodule"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/swift-service-context/Sources/ServiceContextModule/ServiceContextKey.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-service-context.build/Debug-iphonesimulator/ServiceContextModule.build/Objects-normal/x86_64/ServiceContextKey.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-service-context.build/Debug-iphonesimulator/ServiceContextModule.build/Objects-normal/x86_64/ServiceContextKey.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-service-context.build/Debug-iphonesimulator/ServiceContextModule.build/Objects-normal/x86_64/ServiceContextKey.dia",
+    "index-unit-output-path" : "/swift-service-context.build/Debug-iphonesimulator/ServiceContextModule.build/Objects-normal/x86_64/ServiceContextKey.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-service-context.build/Debug-iphonesimulator/ServiceContextModule.build/Objects-normal/x86_64/ServiceContextKey.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-service-context.build/Debug-iphonesimulator/ServiceContextModule.build/Objects-normal/x86_64/ServiceContextKey.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-service-context.build/Debug-iphonesimulator/ServiceContextModule.build/Objects-normal/x86_64/ServiceContextKey.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/swift-service-context.build/Debug-iphonesimulator/ServiceContextModule.build/Objects-normal/x86_64/ServiceContextKey~partial.swiftmodule"
+  }
+}

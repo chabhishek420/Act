@@ -1,0 +1,444 @@
+//
+//  ChatView.swift
+//  Rube-ios
+//
+//  Main chat interface
+//
+
+import SwiftUI
+
+struct ChatView: View {
+    @State private var viewModel = ChatViewModel()
+    @State private var showSidebar = false
+    @State private var showDeleteAlert = false
+    @State private var conversationToDelete: String?
+
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 0) {
+                // Messages or Welcome
+                if viewModel.messages.isEmpty && !viewModel.isLoading {
+                    WelcomeView(
+                        inputText: $viewModel.inputText,
+                        onSend: {
+                            Task { await viewModel.sendMessage() }
+                        }
+                    )
+                } else {
+                    // Messages list
+                    ScrollViewReader { proxy in
+                        ScrollView {
+                            LazyVStack(spacing: 12) {
+                                ForEach(viewModel.messages) { message in
+                                    MessageBubble(message: message)
+                                        .id(message.id)
+                                }
+
+                                // Streaming message
+                                if viewModel.isStreaming {
+                                    StreamingMessageView(
+                                        content: viewModel.streamingContent,
+                                        toolCalls: viewModel.streamingToolCalls
+                                    )
+                                    .id("streaming")
+                                }
+
+                                // Loading indicator
+                                if viewModel.isLoading && !viewModel.isStreaming {
+                                    HStack {
+                                        ProgressView()
+                                            .padding()
+                                        Spacer()
+                                    }
+                                    .id("loading")
+                                }
+                            }
+                            .padding()
+                        }
+                        .onChange(of: viewModel.streamingContent) { _, _ in
+                            withAnimation {
+                                proxy.scrollTo("streaming", anchor: .bottom)
+                            }
+                        }
+                        .onChange(of: viewModel.messages.count) { _, _ in
+                            if let lastId = viewModel.messages.last?.id {
+                                withAnimation {
+                                    proxy.scrollTo(lastId, anchor: .bottom)
+                                }
+                            }
+                        }
+                    }
+
+                    // Input bar
+                    MessageInputView(
+                        text: $viewModel.inputText,
+                        isLoading: viewModel.isLoading,
+                        onSend: {
+                            Task { await viewModel.sendMessage() }
+                        }
+                    )
+                }
+            }
+            .navigationTitle("Rube")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        showSidebar = true
+                    } label: {
+                        Image(systemName: "sidebar.left")
+                    }
+                }
+
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        viewModel.startNewChat()
+                    } label: {
+                        Image(systemName: "square.and.pencil")
+                    }
+                }
+            }
+            .sheet(isPresented: $showSidebar) {
+                ConversationSidebar(
+                    conversations: viewModel.conversations,
+                    currentId: viewModel.currentConversationId,
+                    onSelect: { id in
+                        Task { await viewModel.loadConversation(id) }
+                        showSidebar = false
+                    },
+                    onDelete: { id in
+                        conversationToDelete = id
+                        showDeleteAlert = true
+                    },
+                    onNewChat: {
+                        viewModel.startNewChat()
+                        showSidebar = false
+                    }
+                )
+            }
+            .alert("Delete Conversation?", isPresented: $showDeleteAlert) {
+                Button("Cancel", role: .cancel) {}
+                Button("Delete", role: .destructive) {
+                    if let id = conversationToDelete {
+                        Task { await viewModel.deleteConversation(id) }
+                    }
+                }
+            } message: {
+                Text("This action cannot be undone.")
+            }
+            .overlay {
+                // Connection prompt overlay
+                if viewModel.showConnectionPrompt, let request = viewModel.pendingConnectionRequest {
+                    ZStack {
+                        Color.black.opacity(0.4)
+                            .ignoresSafeArea()
+                            .onTapGesture {
+                                viewModel.dismissConnectionRequest()
+                            }
+
+                        ConnectionPromptView(
+                            request: request,
+                            onConnect: { oauthUrl in
+                                Task {
+                                    await viewModel.connectApp(oauthUrl: oauthUrl)
+                                }
+                            },
+                            onDismiss: {
+                                viewModel.dismissConnectionRequest()
+                            }
+                        )
+                        .transition(.scale.combined(with: .opacity))
+                    }
+                    .animation(.spring(response: 0.3), value: viewModel.showConnectionPrompt)
+                }
+            }
+            .task {
+                await viewModel.loadConversations()
+            }
+        }
+    }
+}
+
+// MARK: - Welcome View
+
+struct WelcomeView: View {
+    @Binding var inputText: String
+    let onSend: () -> Void
+
+    var body: some View {
+        VStack(spacing: 24) {
+            Spacer()
+
+            Image(systemName: "sparkles")
+                .font(.system(size: 48))
+                .foregroundStyle(.blue)
+
+            Text("Welcome to Rube")
+                .font(.title)
+                .fontWeight(.semibold)
+
+            Text("Your AI assistant that can interact with 500+ apps")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+
+            Spacer()
+
+            MessageInputView(
+                text: $inputText,
+                isLoading: false,
+                onSend: onSend
+            )
+        }
+    }
+}
+
+// MARK: - Message Bubble
+
+struct MessageBubble: View {
+    let message: Message
+
+    var body: some View {
+        HStack(alignment: .top) {
+            if message.role == .user { Spacer(minLength: 60) }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text(message.content)
+                    .textSelection(.enabled)
+
+                // Tool calls
+                if let toolCalls = message.toolCalls, !toolCalls.isEmpty {
+                    ForEach(toolCalls) { toolCall in
+                        ToolCallView(toolCall: toolCall)
+                    }
+                }
+            }
+            .padding(12)
+            .background(message.role == .user ? Color.blue : Color(.systemGray6))
+            .foregroundColor(message.role == .user ? .white : .primary)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+
+            if message.role == .assistant { Spacer(minLength: 60) }
+        }
+    }
+}
+
+// MARK: - Streaming Message View
+
+struct StreamingMessageView: View {
+    let content: String
+    let toolCalls: [ToolCall]
+
+    var body: some View {
+        HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 8) {
+                if !content.isEmpty {
+                    Text(content)
+                        .textSelection(.enabled)
+                }
+
+                ForEach(toolCalls) { toolCall in
+                    ToolCallView(toolCall: toolCall)
+                }
+
+                // Typing indicator
+                if content.isEmpty && toolCalls.isEmpty {
+                    HStack(spacing: 4) {
+                        ForEach(0..<3, id: \.self) { i in
+                            Circle()
+                                .fill(Color.gray)
+                                .frame(width: 8, height: 8)
+                                .opacity(0.5)
+                        }
+                    }
+                }
+            }
+            .padding(12)
+            .background(Color(.systemGray6))
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+
+            Spacer(minLength: 60)
+        }
+    }
+}
+
+// MARK: - Tool Call View
+
+struct ToolCallView: View {
+    let toolCall: ToolCall
+    @State private var isExpanded = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Button {
+                withAnimation {
+                    isExpanded.toggle()
+                }
+            } label: {
+                HStack {
+                    // Status icon
+                    Group {
+                        switch toolCall.status {
+                        case .running:
+                            ProgressView()
+                                .scaleEffect(0.8)
+                        case .completed:
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundStyle(.green)
+                        case .error:
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(.red)
+                        }
+                    }
+                    .frame(width: 20)
+
+                    Text(toolCall.name)
+                        .font(.caption)
+                        .fontWeight(.medium)
+
+                    Spacer()
+
+                    Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                        .font(.caption2)
+                }
+            }
+            .buttonStyle(.plain)
+
+            if isExpanded {
+                VStack(alignment: .leading, spacing: 4) {
+                    if !toolCall.input.isEmpty {
+                        Text("Input:")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                        Text(formatJSON(toolCall.input))
+                            .font(.caption2)
+                            .fontDesign(.monospaced)
+                    }
+
+                    if let output = toolCall.output {
+                        Text("Output:")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                        Text(formatAny(output))
+                            .font(.caption2)
+                            .fontDesign(.monospaced)
+                            .lineLimit(10)
+                    }
+                }
+                .padding(.leading, 24)
+            }
+        }
+        .padding(8)
+        .background(Color(.systemGray5))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+
+    private func formatJSON(_ dict: [String: Any]) -> String {
+        guard let data = try? JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted),
+              let string = String(data: data, encoding: .utf8) else {
+            return "\(dict)"
+        }
+        return string
+    }
+
+    private func formatAny(_ value: Any) -> String {
+        if let dict = value as? [String: Any] {
+            return formatJSON(dict)
+        } else if let array = value as? [Any] {
+            guard let data = try? JSONSerialization.data(withJSONObject: array, options: .prettyPrinted),
+                  let string = String(data: data, encoding: .utf8) else {
+                return "\(array)"
+            }
+            return string
+        }
+        return "\(value)"
+    }
+}
+
+// MARK: - Message Input View
+
+struct MessageInputView: View {
+    @Binding var text: String
+    let isLoading: Bool
+    let onSend: () -> Void
+
+    var body: some View {
+        HStack(spacing: 12) {
+            TextField("Send a message...", text: $text, axis: .vertical)
+                .textFieldStyle(.plain)
+                .padding(12)
+                .background(Color(.systemGray6))
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .lineLimit(1...5)
+                .onSubmit {
+                    if !text.isEmpty && !isLoading {
+                        onSend()
+                    }
+                }
+
+            Button {
+                onSend()
+            } label: {
+                Image(systemName: "arrow.up.circle.fill")
+                    .font(.title)
+                    .foregroundStyle(text.isEmpty || isLoading ? .gray : .blue)
+            }
+            .disabled(text.isEmpty || isLoading)
+        }
+        .padding()
+        .background(.ultraThinMaterial)
+    }
+}
+
+// MARK: - Conversation Sidebar
+
+struct ConversationSidebar: View {
+    let conversations: [Conversation]
+    let currentId: String?
+    let onSelect: (String) -> Void
+    let onDelete: (String) -> Void
+    let onNewChat: () -> Void
+
+    var body: some View {
+        NavigationStack {
+            List {
+                Button {
+                    onNewChat()
+                } label: {
+                    Label("New Chat", systemImage: "plus.circle")
+                }
+
+                Section("History") {
+                    ForEach(conversations) { conversation in
+                        Button {
+                            onSelect(conversation.id)
+                        } label: {
+                            VStack(alignment: .leading) {
+                                Text(conversation.title ?? "Untitled")
+                                    .lineLimit(1)
+                                Text(conversation.updatedAt, style: .relative)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .foregroundStyle(conversation.id == currentId ? .blue : .primary)
+                        .swipeActions {
+                            Button(role: .destructive) {
+                                onDelete(conversation.id)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Conversations")
+            .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+}
+
+#Preview {
+    ChatView()
+}

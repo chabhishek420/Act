@@ -1,0 +1,4 @@
+module CNIOOpenBSD {
+umbrella header "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/swift-nio/Sources/CNIOOpenBSD/include/CNIOOpenBSD.h"
+export *
+}

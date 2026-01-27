@@ -1,0 +1,4 @@
+module CNIOBoringSSLShims {
+umbrella header "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/swift-nio-ssl/Sources/CNIOBoringSSLShims/include/CNIOBoringSSLShims.h"
+export *
+}

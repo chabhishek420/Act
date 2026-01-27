@@ -1,0 +1,19 @@
+{
+  "" : {
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/JSONCodable.build/Objects-normal/x86_64/JSONCodable-primary.dia",
+    "emit-module-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/JSONCodable.build/Objects-normal/x86_64/JSONCodable-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/JSONCodable.build/Objects-normal/x86_64/JSONCodable-primary-emit-module.dia",
+    "pch" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/JSONCodable.build/Objects-normal/x86_64/JSONCodable-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/JSONCodable.build/Objects-normal/x86_64/JSONCodable-primary.swiftdeps"
+  },
+  "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/SourcePackages/checkouts/sdk-for-apple/Sources/JSONCodable/Codable+JSON.swift" : {
+    "const-values" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/JSONCodable.build/Objects-normal/x86_64/Codable+JSON.swiftconstvalues",
+    "dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/JSONCodable.build/Objects-normal/x86_64/Codable+JSON.d",
+    "diagnostics" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/JSONCodable.build/Objects-normal/x86_64/Codable+JSON.dia",
+    "index-unit-output-path" : "/Appwrite.build/Debug-iphonesimulator/JSONCodable.build/Objects-normal/x86_64/Codable+JSON.o",
+    "llvm-bc" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/JSONCodable.build/Objects-normal/x86_64/Codable+JSON.bc",
+    "object" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/JSONCodable.build/Objects-normal/x86_64/Codable+JSON.o",
+    "swift-dependencies" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/JSONCodable.build/Objects-normal/x86_64/Codable+JSON.swiftdeps",
+    "swiftmodule" : "/Users/roshansharma/Desktop/Vscode/Rube-ios/Rube-ios/build/Build/Intermediates.noindex/Appwrite.build/Debug-iphonesimulator/JSONCodable.build/Objects-normal/x86_64/Codable+JSON~partial.swiftmodule"
+  }
+}

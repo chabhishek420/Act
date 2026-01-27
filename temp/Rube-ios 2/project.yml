@@ -1,0 +1,42 @@
+name: Rube-ios
+options:
+  bundleIdPrefix: com.rube
+targets:
+  Rube-ios:
+    type: application
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources: [Rube-ios]
+    info:
+      path: Rube-ios/Info.plist
+      properties:
+        CFBundleDisplayName: "Rube"
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        UILaunchScreen:
+          UIColorName: "LaunchBackgroundColor"
+        CFBundleURLTypes:
+          - CFBundleTypeRole: Editor
+            CFBundleURLName: com.rube.ios
+            CFBundleURLSchemes: [rube]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.rube.ios
+        MARKETING_VERSION: 1.0.0
+        CURRENT_PROJECT_VERSION: 1
+    dependencies:
+      - package: Appwrite
+      - package: swift-service-lifecycle
+        product: ServiceLifecycle
+      - package: swift-async-algorithms
+        product: AsyncAlgorithms
+packages:
+  Appwrite:
+    url: https://github.com/appwrite/sdk-for-apple
+    from: 13.5.0
+  swift-service-lifecycle:
+    url: https://github.com/swift-server/swift-service-lifecycle.git
+    from: 2.9.1
+  swift-async-algorithms:
+    url: https://github.com/apple/swift-async-algorithms.git
+    from: 1.1.1

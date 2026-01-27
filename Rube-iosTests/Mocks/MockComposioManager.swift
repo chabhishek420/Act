@@ -25,7 +25,7 @@ final class MockComposioManager: ComposioManagerProtocol, @unchecked Sendable {
     
     // MARK: - Tool Router (Mocks)
     
-    func getSession(for userId: String) async throws -> ToolRouterSession {
+    func getSession(for userId: String, conversationId: String) async throws -> ToolRouterSession {
         // Create a dummy session for mocking
         let data = "{\"session_id\": \"mock_session_123\"}".data(using: .utf8)!
         return try JSONDecoder().decode(ToolRouterSession.self, from: data)

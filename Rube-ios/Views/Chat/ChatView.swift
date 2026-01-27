@@ -46,9 +46,15 @@ struct ChatView: View {
                         ScrollView {
                             LazyVStack(spacing: 12) {
                                 ForEach(viewModel.messages) { message in
-                                    MessageBubble(message: message) { failedMessage in
-                                        Task { await viewModel.retryMessage(failedMessage) }
-                                    }
+                                    MessageBubble(
+                                        message: message,
+                                        onRetry: { failedMessage in
+                                            Task { await viewModel.retryMessage(failedMessage) }
+                                        },
+                                        onRegenerate: { assistantMessage in
+                                            Task { await viewModel.regenerateMessage(assistantMessage) }
+                                        }
+                                    )
                                     .id(message.id)
                                 }
 
@@ -281,14 +287,44 @@ struct WelcomeView: View {
 struct MessageBubble: View {
     let message: Message
     let onRetry: ((Message) -> Void)?
+    var onRegenerate: ((Message) -> Void)?
 
     var body: some View {
         HStack(alignment: .top) {
             if message.role == .user { Spacer(minLength: 60) }
 
             VStack(alignment: .leading, spacing: 8) {
-                Text(message.content)
-                    .textSelection(.enabled)
+                if message.role == .user {
+                    Text(message.content)
+                        .padding(12)
+                        .background(message.isFailed ? Color.red.opacity(0.1) : Color(.systemGray6))
+                        .foregroundColor(.primary)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                } else {
+                    VStack(alignment: .leading, spacing: 12) {
+                        // Use LinkableTextView for tappable links
+                        LinkableTextView(text: message.content)
+                            .fixedSize(horizontal: false, vertical: true)
+
+                        // Action buttons for assistant
+                        HStack(spacing: 16) {
+                            Button {
+                                UIPasteboard.general.string = message.content
+                            } label: {
+                                Image(systemName: "doc.on.doc")
+                                    .font(.system(size: 14))
+                            }
+
+                            Button {
+                                onRegenerate?(message)
+                            } label: {
+                                Image(systemName: "arrow.clockwise")
+                                    .font(.system(size: 14))
+                            }
+                        }
+                        .foregroundStyle(.secondary)
+                    }
+                }
 
                 // Tool calls
                 if let toolCalls = message.toolCalls, !toolCalls.isEmpty {
@@ -296,27 +332,27 @@ struct MessageBubble: View {
                         ToolCallView(toolCall: toolCall)
                     }
                 }
-                
+
                 // Attachments
                 if let attachments = message.attachments, !attachments.isEmpty {
                     ForEach(attachments) { attachment in
                         AttachmentView(attachment: attachment)
                     }
                 }
-                
+
                 // Failure indicator and retry button
                 if message.isFailed {
                     HStack {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .foregroundStyle(.red)
                             .font(.caption)
-                        
+
                         Text(message.failureReason ?? "Failed to send")
                             .font(.caption)
                             .foregroundStyle(.secondary)
-                        
+
                         Spacer()
-                        
+
                         Button {
                             onRetry?(message)
                         } label: {
@@ -329,10 +365,6 @@ struct MessageBubble: View {
                     .padding(.top, 4)
                 }
             }
-            .padding(12)
-            .background(message.isFailed ? Color.red.opacity(0.1) : (message.role == .user ? Color.blue : Color(.systemGray6)))
-            .foregroundColor(message.role == .user && !message.isFailed ? .white : .primary)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
 
             if message.role == .assistant { Spacer(minLength: 60) }
         }
@@ -385,8 +417,9 @@ struct StreamingMessageView: View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 8) {
                 if !content.isEmpty {
-                    Text(content)
-                        .textSelection(.enabled)
+                    // Use LinkableTextView for tappable links during streaming
+                    LinkableTextView(text: content)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
 
                 ForEach(toolCalls) { toolCall in
@@ -403,11 +436,11 @@ struct StreamingMessageView: View {
                                 .opacity(0.5)
                         }
                     }
+                    .padding(12)
+                    .background(Color(.systemGray6))
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
                 }
             }
-            .padding(12)
-            .background(Color(.systemGray6))
-            .clipShape(RoundedRectangle(cornerRadius: 16))
 
             Spacer(minLength: 60)
         }

@@ -3,13 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		10A5E9A4A96FCE165E66B1C2 /* E2EToolExecutionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC67990D10BCE51587B89F9 /* E2EToolExecutionTests.swift */; };
 		14F1DF3274857295572A324C /* SystemDiagnosticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD69A3532BB50AAF6FEF383 /* SystemDiagnosticsView.swift */; };
 		168F1B39930A8FB3869784F4 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E717BEA267DEACE1D1CED1B /* ChatView.swift */; };
+		16A1B2C3D4E5F6A7B8C9D0E1 /* LinkableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B2C3D4E5F6A7B8C9D0E1F2 /* LinkableTextView.swift */; };
 		19CEC6C9B6E9BB48E44FC0B9 /* ServiceLifecycle in Frameworks */ = {isa = PBXBuildFile; productRef = 0AAAC1E0E32779A5AA7A26E2 /* ServiceLifecycle */; };
 		27C34DF0F455FE6CFFA31619 /* UserInputFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93031EECD2D163FDB4CAABDE /* UserInputFormView.swift */; };
 		29E1F0DBD6038C79F3994CDA /* ExecutionModeSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E603732133EA326557CD725 /* ExecutionModeSettings.swift */; };
@@ -81,6 +82,7 @@
 		1F4FD1B4C04E81121DE90186 /* ComposioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposioManager.swift; sourceTree = "<group>"; };
 		1F682C3A362290ACF1DA5810 /* AnyCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyCodable.swift; sourceTree = "<group>"; };
 		2545366A6792A090FC663539 /* Rube_iosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rube_iosApp.swift; sourceTree = "<group>"; };
+		26B2C3D4E5F6A7B8C9D0E1F2 /* LinkableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkableTextView.swift; sourceTree = "<group>"; };
 		2D2C72275BC927C2D86F9306 /* NetworkRetryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRetryTests.swift; sourceTree = "<group>"; };
 		2DC67990D10BCE51587B89F9 /* E2EToolExecutionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = E2EToolExecutionTests.swift; sourceTree = "<group>"; };
 		2F8512A28DDE64DF717ED6B9 /* SSEParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSEParser.swift; sourceTree = "<group>"; };
@@ -104,7 +106,7 @@
 		8B99CB70731CD25096A08438 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		8C6AAC589D79863F25B1FC52 /* ComposioConnectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposioConnectionService.swift; sourceTree = "<group>"; };
 		93031EECD2D163FDB4CAABDE /* UserInputFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInputFormView.swift; sourceTree = "<group>"; };
-		983F9343E6AB9330E9CE3296 /* Rube-ios.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "Rube-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		983F9343E6AB9330E9CE3296 /* Rube-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rube-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D94399D5C412A7D7BD3FABE /* ComposioManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposioManagerProtocol.swift; sourceTree = "<group>"; };
 		9E715B8D78A582F57A12ACD9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9E717BEA267DEACE1D1CED1B /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
@@ -285,10 +287,19 @@
 			children = (
 				23C8CA2963A633C5931B5D8A /* Auth */,
 				3B0617E2BFB998E26AC27CBA /* Chat */,
+				36C3D4E5F6A7B8C9D0E1F2G3 /* Components */,
 				9941FF6446453684DEE2C9A6 /* Connection */,
 				7CF4FA0E01C960923B91E874 /* Settings */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		36C3D4E5F6A7B8C9D0E1F2G3 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				26B2C3D4E5F6A7B8C9D0E1F2 /* LinkableTextView.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		B26F37680EE4134DA7C2D6D1 /* Products */ = {
@@ -385,7 +396,6 @@
 				C073A845E29510E748FC1AFC /* XCRemoteSwiftPackageReference "swift-service-lifecycle" */,
 				1AC617434B7A36C25E601DED /* XCRemoteSwiftPackageReference "SwiftOpenAI" */,
 			);
-			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -431,6 +441,7 @@
 				5EED3F6B22F4CA898649FA94 /* ConversationModel.swift in Sources */,
 				29E1F0DBD6038C79F3994CDA /* ExecutionModeSettings.swift in Sources */,
 				E32A8EB5522F74577A51393A /* KeychainManager.swift in Sources */,
+				16A1B2C3D4E5F6A7B8C9D0E1 /* LinkableTextView.swift in Sources */,
 				49A719124717DA8334DC86EB /* Message.swift in Sources */,
 				335C5423E736AFC05F64BAEC /* MessageModel.swift in Sources */,
 				E1F362FE68E54839387036F7 /* NativeChatService.swift in Sources */,
@@ -654,6 +665,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 52SN4U8784;
 				INFOPLIST_FILE = "Rube-ios/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (

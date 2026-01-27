@@ -1,0 +1,505 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		168F1B39930A8FB3869784F4 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E717BEA267DEACE1D1CED1B /* ChatView.swift */; };
+		19CEC6C9B6E9BB48E44FC0B9 /* ServiceLifecycle in Frameworks */ = {isa = PBXBuildFile; productRef = 0AAAC1E0E32779A5AA7A26E2 /* ServiceLifecycle */; };
+		3180BF315EBFE8250011E69A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E715B8D78A582F57A12ACD9 /* Assets.xcassets */; };
+		4311FD3DEFC1742882601D4D /* SSEParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F8512A28DDE64DF717ED6B9 /* SSEParser.swift */; };
+		48E169C32F441A19BF687183 /* ConnectionPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA5EC984DDDDBE960926EA0 /* ConnectionPromptView.swift */; };
+		494CE3622561B0ED2EF3AF9D /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99FB3405B1C6E3AFA3C8776A /* ChatService.swift */; };
+		49A719124717DA8334DC86EB /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096087740F6AF17DEC6C17EC /* Message.swift */; };
+		5539301FBB20EC33AC46A1C5 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 41C2BD051EBEBD1202A3A67E /* AsyncAlgorithms */; };
+		6332FF5E3303A65ADBD14B87 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0903DB0B35E5E836A3F49C1A /* ContentView.swift */; };
+		83394728359EA49C08438F4E /* OAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF13493491C057BA160F7C8 /* OAuthService.swift */; };
+		8C51D2DEEAE27EF71560B4E4 /* Rube_iosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2545366A6792A090FC663539 /* Rube_iosApp.swift */; };
+		94DE8A46A1A907D16949FC36 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B16DD77A9D14AAADA17B5C5 /* AuthView.swift */; };
+		D7B02DCB3FCFD0AFBB2EE605 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B99CB70731CD25096A08438 /* Conversation.swift */; };
+		DBB93050B96DE19A4BA35304 /* Appwrite in Frameworks */ = {isa = PBXBuildFile; productRef = 3A55A7A2D2982C41FE61BCCD /* Appwrite */; };
+		E083027CC097EB0E645F493D /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7101637226C583B6D7F0AA3 /* AuthService.swift */; };
+		E635BCFED86C2CFAD78350B9 /* ConversationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933AC5FA305887C89EA4E604 /* ConversationService.swift */; };
+		EBAD81A3AEE3822A75DE4879 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4807CFFDAD7B0B560C368A2 /* Config.swift */; };
+		F851FA0542102380F8FC30E9 /* AppwriteClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81CFDCAF3F9AFC27400CED1A /* AppwriteClient.swift */; };
+		FFA83353910099123C5ABAAC /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2C6FA6606226E423294DCB /* ChatViewModel.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0903DB0B35E5E836A3F49C1A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		096087740F6AF17DEC6C17EC /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		2545366A6792A090FC663539 /* Rube_iosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rube_iosApp.swift; sourceTree = "<group>"; };
+		2F8512A28DDE64DF717ED6B9 /* SSEParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSEParser.swift; sourceTree = "<group>"; };
+		33FE4D5D3879192D1357C8A7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		4B16DD77A9D14AAADA17B5C5 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
+		5C2C6FA6606226E423294DCB /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		6CF13493491C057BA160F7C8 /* OAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthService.swift; sourceTree = "<group>"; };
+		81CFDCAF3F9AFC27400CED1A /* AppwriteClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppwriteClient.swift; sourceTree = "<group>"; };
+		8B99CB70731CD25096A08438 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
+		933AC5FA305887C89EA4E604 /* ConversationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationService.swift; sourceTree = "<group>"; };
+		983F9343E6AB9330E9CE3296 /* Rube-ios.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "Rube-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		99FB3405B1C6E3AFA3C8776A /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
+		9E715B8D78A582F57A12ACD9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9E717BEA267DEACE1D1CED1B /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		A7101637226C583B6D7F0AA3 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		E4807CFFDAD7B0B560C368A2 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		FFA5EC984DDDDBE960926EA0 /* ConnectionPromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionPromptView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		46AA21CD503FC8F356E86BC9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DBB93050B96DE19A4BA35304 /* Appwrite in Frameworks */,
+				19CEC6C9B6E9BB48E44FC0B9 /* ServiceLifecycle in Frameworks */,
+				5539301FBB20EC33AC46A1C5 /* AsyncAlgorithms in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		23C8CA2963A633C5931B5D8A /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				4B16DD77A9D14AAADA17B5C5 /* AuthView.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		286ED2C54A5BE317A101AE14 /* Rube-ios */ = {
+			isa = PBXGroup;
+			children = (
+				9E715B8D78A582F57A12ACD9 /* Assets.xcassets */,
+				0903DB0B35E5E836A3F49C1A /* ContentView.swift */,
+				33FE4D5D3879192D1357C8A7 /* Info.plist */,
+				2545366A6792A090FC663539 /* Rube_iosApp.swift */,
+				BCC1BD4738C9EEC0CA191874 /* Config */,
+				371A9073F56C6E1C60C1B8A3 /* Lib */,
+				28F6B7012529548EE9849080 /* Models */,
+				5281473C0E3510A00C12A204 /* Services */,
+				77C34F2053B1943F60C8A230 /* Utilities */,
+				872CAC2500309B7BB7A06C6D /* ViewModels */,
+				B25206F78D7AB36B046CB7CB /* Views */,
+			);
+			path = "Rube-ios";
+			sourceTree = "<group>";
+		};
+		28F6B7012529548EE9849080 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				8B99CB70731CD25096A08438 /* Conversation.swift */,
+				096087740F6AF17DEC6C17EC /* Message.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		371A9073F56C6E1C60C1B8A3 /* Lib */ = {
+			isa = PBXGroup;
+			children = (
+				81CFDCAF3F9AFC27400CED1A /* AppwriteClient.swift */,
+			);
+			path = Lib;
+			sourceTree = "<group>";
+		};
+		3B0617E2BFB998E26AC27CBA /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				9E717BEA267DEACE1D1CED1B /* ChatView.swift */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
+		5281473C0E3510A00C12A204 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				A7101637226C583B6D7F0AA3 /* AuthService.swift */,
+				99FB3405B1C6E3AFA3C8776A /* ChatService.swift */,
+				933AC5FA305887C89EA4E604 /* ConversationService.swift */,
+				6CF13493491C057BA160F7C8 /* OAuthService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		77C34F2053B1943F60C8A230 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				2F8512A28DDE64DF717ED6B9 /* SSEParser.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		7C7CC38A56573E96319AA466 = {
+			isa = PBXGroup;
+			children = (
+				286ED2C54A5BE317A101AE14 /* Rube-ios */,
+				B26F37680EE4134DA7C2D6D1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		872CAC2500309B7BB7A06C6D /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				5C2C6FA6606226E423294DCB /* ChatViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		9941FF6446453684DEE2C9A6 /* Connection */ = {
+			isa = PBXGroup;
+			children = (
+				FFA5EC984DDDDBE960926EA0 /* ConnectionPromptView.swift */,
+			);
+			path = Connection;
+			sourceTree = "<group>";
+		};
+		B25206F78D7AB36B046CB7CB /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				23C8CA2963A633C5931B5D8A /* Auth */,
+				3B0617E2BFB998E26AC27CBA /* Chat */,
+				9941FF6446453684DEE2C9A6 /* Connection */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		B26F37680EE4134DA7C2D6D1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				983F9343E6AB9330E9CE3296 /* Rube-ios.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BCC1BD4738C9EEC0CA191874 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				E4807CFFDAD7B0B560C368A2 /* Config.swift */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		12063F65F897CF05050532C5 /* Rube-ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D654B8838450B068928314CF /* Build configuration list for PBXNativeTarget "Rube-ios" */;
+			buildPhases = (
+				A982E657BF1363D3D1A0F207 /* Sources */,
+				0A033985ED8D4E80796B46B5 /* Resources */,
+				46AA21CD503FC8F356E86BC9 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Rube-ios";
+			packageProductDependencies = (
+				3A55A7A2D2982C41FE61BCCD /* Appwrite */,
+				0AAAC1E0E32779A5AA7A26E2 /* ServiceLifecycle */,
+				41C2BD051EBEBD1202A3A67E /* AsyncAlgorithms */,
+			);
+			productName = "Rube-ios";
+			productReference = 983F9343E6AB9330E9CE3296 /* Rube-ios.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A1752B2B3D686E8D3E9659A6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+			};
+			buildConfigurationList = CC57C1215009B8C7652C46A6 /* Build configuration list for PBXProject "Rube-ios" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 7C7CC38A56573E96319AA466;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				2659838C9D243B673BFD3895 /* XCRemoteSwiftPackageReference "sdk-for-apple" */,
+				3D05E62D98EC75778EE90849 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
+				C073A845E29510E748FC1AFC /* XCRemoteSwiftPackageReference "swift-service-lifecycle" */,
+			);
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				12063F65F897CF05050532C5 /* Rube-ios */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0A033985ED8D4E80796B46B5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3180BF315EBFE8250011E69A /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A982E657BF1363D3D1A0F207 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F851FA0542102380F8FC30E9 /* AppwriteClient.swift in Sources */,
+				E083027CC097EB0E645F493D /* AuthService.swift in Sources */,
+				94DE8A46A1A907D16949FC36 /* AuthView.swift in Sources */,
+				494CE3622561B0ED2EF3AF9D /* ChatService.swift in Sources */,
+				168F1B39930A8FB3869784F4 /* ChatView.swift in Sources */,
+				FFA83353910099123C5ABAAC /* ChatViewModel.swift in Sources */,
+				EBAD81A3AEE3822A75DE4879 /* Config.swift in Sources */,
+				48E169C32F441A19BF687183 /* ConnectionPromptView.swift in Sources */,
+				6332FF5E3303A65ADBD14B87 /* ContentView.swift in Sources */,
+				D7B02DCB3FCFD0AFBB2EE605 /* Conversation.swift in Sources */,
+				E635BCFED86C2CFAD78350B9 /* ConversationService.swift in Sources */,
+				49A719124717DA8334DC86EB /* Message.swift in Sources */,
+				83394728359EA49C08438F4E /* OAuthService.swift in Sources */,
+				8C51D2DEEAE27EF71560B4E4 /* Rube_iosApp.swift in Sources */,
+				4311FD3DEFC1742882601D4D /* SSEParser.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		50E8D5390AF9E3644C11E3CB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		7E4A8A9CF58B7DE36DAFEAB1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = "Rube-ios/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rube.ios;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		820A0BAC952EFD9746A04A33 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		ED6D2D37A90C0EA757A7CDC0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = "Rube-ios/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rube.ios;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CC57C1215009B8C7652C46A6 /* Build configuration list for PBXProject "Rube-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				820A0BAC952EFD9746A04A33 /* Debug */,
+				50E8D5390AF9E3644C11E3CB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D654B8838450B068928314CF /* Build configuration list for PBXNativeTarget "Rube-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ED6D2D37A90C0EA757A7CDC0 /* Debug */,
+				7E4A8A9CF58B7DE36DAFEAB1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2659838C9D243B673BFD3895 /* XCRemoteSwiftPackageReference "sdk-for-apple" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/appwrite/sdk-for-apple";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 13.5.0;
+			};
+		};
+		3D05E62D98EC75778EE90849 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-async-algorithms.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.1;
+			};
+		};
+		C073A845E29510E748FC1AFC /* XCRemoteSwiftPackageReference "swift-service-lifecycle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/swift-server/swift-service-lifecycle.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.9.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0AAAC1E0E32779A5AA7A26E2 /* ServiceLifecycle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C073A845E29510E748FC1AFC /* XCRemoteSwiftPackageReference "swift-service-lifecycle" */;
+			productName = ServiceLifecycle;
+		};
+		3A55A7A2D2982C41FE61BCCD /* Appwrite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2659838C9D243B673BFD3895 /* XCRemoteSwiftPackageReference "sdk-for-apple" */;
+			productName = Appwrite;
+		};
+		41C2BD051EBEBD1202A3A67E /* AsyncAlgorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3D05E62D98EC75778EE90849 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
+			productName = AsyncAlgorithms;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = A1752B2B3D686E8D3E9659A6 /* Project object */;
+}
