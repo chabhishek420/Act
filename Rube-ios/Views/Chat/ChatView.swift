@@ -464,6 +464,9 @@ struct ToolCallView: View {
                     // Status icon
                     Group {
                         switch toolCall.status {
+                        case .pending:
+                            Image(systemName: "clock.fill")
+                                .foregroundStyle(.gray)
                         case .running:
                             ProgressView()
                                 .scaleEffect(0.8)

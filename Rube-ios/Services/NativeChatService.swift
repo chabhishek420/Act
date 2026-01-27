@@ -231,13 +231,7 @@ final class NativeChatService {
                     }
 
                     // Execute tool with retry logic for transient errors
-                    let result: ToolRouterExecuteResponse
-                    do {
-                        result = try await executeToolWithRetry(call.name, sessionId: sessionId, arguments: toolArgs)
-                    } catch let retryError {
-                        // If retry exhausted, throw to outer error handler
-                        throw retryError
-                    }
+                    let result = try await executeToolWithRetry(call.name, sessionId: sessionId, arguments: toolArgs)
 
                     // Emit phase: Tool execution completed
                     await MainActor.run {
@@ -247,14 +241,13 @@ final class NativeChatService {
                             logger.debug("[NativeChatService] ✅ Completed tool: \(call.name)")
                         }
                     }
-                        
-                        // Capture memory updates from Search or Multi-Execute
-                        if let updatedMemory = result.data["memory"]?.value as? [String: [String]] {
-                            for (app, entries) in updatedMemory {
-                                var current = currentMemory[app] ?? []
-                                current.append(contentsOf: entries)
-                                currentMemory[app] = Array(Set(current)) // De-duplicate
-                            }
+
+                    // Capture memory updates from Search or Multi-Execute
+                    if let updatedMemory = result.data["memory"]?.value as? [String: [String]] {
+                        for (app, entries) in updatedMemory {
+                            var current = currentMemory[app] ?? []
+                            current.append(contentsOf: entries)
+                            currentMemory[app] = Array(Set(current)) // De-duplicate
                         }
                     }
 
@@ -328,6 +321,7 @@ final class NativeChatService {
                         logger.error("[NativeChatService] ❌ Tool execution failed: \(userFriendlyError)")
                         messages.append(.init(role: .tool, content: .text("{\"error\": \"\(userFriendlyError)\"}"), toolCallID: call.id))
                     }
+                }
             }
             var nextTools = tools
             return try await runChatLoop(

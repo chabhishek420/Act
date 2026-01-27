@@ -8,6 +8,9 @@
 import Foundation
 import AuthenticationServices
 import UIKit
+import OSLog
+
+private let logger = Logger(subsystem: "com.rube.ios", category: "OAuthService")
 
 enum OAuthError: LocalizedError {
     case cancelled
@@ -266,5 +269,17 @@ extension OAuthService {
         }
 
         return success
+    }
+}
+
+// MARK: - ASWebAuthenticationPresentationContextProviding
+
+extension OAuthService: ASWebAuthenticationPresentationContextProviding {
+    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first else {
+            return ASPresentationAnchor()
+        }
+        return window
     }
 }

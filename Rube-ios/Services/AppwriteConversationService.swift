@@ -504,6 +504,7 @@ final class AppwriteConversationService {
 
     private func statusToString(_ status: ToolCallStatus) -> String {
         switch status {
+        case .pending: return "pending"
         case .running: return "running"
         case .completed: return "completed"
         case .error: return "error"
@@ -512,6 +513,7 @@ final class AppwriteConversationService {
 
     private func stringToStatus(_ string: String) -> ToolCallStatus {
         switch string {
+        case "pending": return .pending
         case "running": return .running
         case "completed": return .completed
         case "error": return .error
