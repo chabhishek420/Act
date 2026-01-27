@@ -287,7 +287,46 @@ xcodebuild test -project Rube-ios.xcodeproj -scheme Rube-ios -destination 'platf
 
 ## 📝 Change Log
 
-### January 27, 2026
+### January 27, 2026 (Session 2 - Tool Router Implementation)
+**Status**: Implemented 4 major Tool Router patterns from open-rube analysis
+
+**Accomplishments**:
+1. ✅ **Session-Based Architecture** - Per-user, per-conversation isolation
+   - Implemented compound session key (userId||conversationId)
+   - Added memory cache with 30-minute TTL
+   - Files: Services/ComposioManager.swift
+   - Commit: 896b61d4 (45 min)
+
+2. ✅ **In-Chat Authentication Flow** - OAuth without leaving conversation
+   - Added auth error detection and Connect Link generation
+   - Implemented OAuthService with pending request tracking
+   - Files: Services/OAuthService.swift, Services/NativeChatService.swift
+   - Commit: 344216f8 (2 hours)
+
+3. ✅ **Three-Layer Error Recovery** - Graceful error handling
+   - Layer 1: Automatic retry for transient errors
+   - Layer 2: In-chat auth for authentication failures
+   - Layer 3: User-friendly messages for non-recoverable errors
+   - Files: Services/NativeChatService.swift
+   - Commit: cc96468e (1.5 hours)
+
+4. ✅ **Streaming-First Tool Execution** - Real-time feedback
+   - Added .pending status to ToolCallStatus enum
+   - Implemented phase-based streaming (pending → running → completed/error)
+   - Files: Services/NativeChatService.swift, Models/Message.swift
+   - Commit: 291157a2 (45 min)
+
+5. ✅ **Custom Input Tool** - Complex OAuth support (Already implemented)
+   - UserInputRequest model with field types
+   - UserInputFormView for data collection
+   - Integration in ChatView with modal overlay
+
+**Documentation**:
+- Created TOOL_ROUTER_LEARNINGS.md (717 lines)
+- Updated SCRATCHPAD.md sprint goals and active tasks
+- Documented all architectural decisions
+
+### January 27, 2026 (Session 1)
 **Status**: Created comprehensive SCRATCHPAD.md for project tracking
 
 - Created SCRATCHPAD.md with all sections
