@@ -113,15 +113,50 @@ External APIs (Appwrite, LLM, Composio)
 ## 🔄 Current Status & Blockers
 
 ### Sprint Goals (January 27, 2026)
-1. **Increase test coverage** from ~50% to 65% (NativeChatService, ComposioManager)
-2. **Improve error handling** in tool execution flow
-3. **Document architectural decisions** in this SCRATCHPAD
-4. **Verify Composio capabilities** against claims in documentation ✅ VERIFIED
+1. **Complete Tool Router architecture research** ✅ DONE
+   - Analyzed open-rube codebase (Next.js/React production implementation)
+   - Extracted learnings documented in TOOL_ROUTER_LEARNINGS.md
+   - Identified 5 key architectural patterns applicable to Rube-iOS
+   - Verified best practices from Composio official documentation
+
+2. **Increase test coverage** from ~50% to 65% (NativeChatService, ComposioManager)
+
+3. **Improve error handling** in tool execution flow with learnings from open-rube
+
+4. **Implement Tool Router patterns** from research in Rube-iOS services
 
 ### Active Tasks
-- Updating ViewModels/ChatViewModel.swift with error handling improvements
-- Adding error recovery for failed tool executions
-- Writing unit tests for streaming scenarios
+- Implementing session-based architecture from open-rube patterns
+- Adding multi-layer authentication (user + app + tool level)
+- Integrating in-chat authentication flow
+- Updating error handling with patterns from production implementation
+
+### Key Learnings Applied (From open-rube Analysis)
+
+**✅ Session Architecture**
+- Pattern: Per-user, per-conversation MCP sessions cached in memory
+- Benefit: Credential isolation, efficient resource reuse
+- Action: Implement session cache in ComposioManager with TTL
+
+**✅ In-Chat Authentication**
+- Pattern: `COMPOSIO_MANAGE_CONNECTIONS` meta-tool returns OAuth links
+- Benefit: Users don't leave chat, superior UX
+- Action: Update OAuthService to handle inline authentication
+
+**✅ Streaming-First Design**
+- Pattern: Stream tool execution phases (start → running → complete)
+- Benefit: Real-time feedback prevents frozen UI
+- Action: Implement AsyncStream for tool execution in NativeChatService
+
+**✅ Error Recovery**
+- Pattern: Three-layer handling (auto-retry → user input → graceful degradation)
+- Benefit: Robust handling of transient failures and auth issues
+- Action: Add retry logic and user prompts for error scenarios
+
+**✅ Custom Input for Complex OAuth**
+- Pattern: REQUEST_USER_INPUT meta-tool for pre-OAuth data collection
+- Benefit: Handle OAuth flows requiring additional parameters
+- Action: Design custom input handling in chat UI
 
 ### Known Blockers
 
@@ -133,16 +168,19 @@ External APIs (Appwrite, LLM, Composio)
 - **Documentation Outdated**: rube-ios.md needs update
   - Current architecture has evolved since last documented
   - Impact: New team members confused about service interactions
+  - Mitigation: See TOOL_ROUTER_LEARNINGS.md for reference patterns
 
 **⚠️ Medium Priority**
 - **Performance**: Tool startup latency ~2-5s (MCP mode)
   - Migration to Native mode can reduce to ~1s
   - Impact: Noticeable delay in user experience
   - Effort: Estimated 4 hours
+  - Validated from open-rube: Native mode is production-ready
 
 - **Error Handling**: Tool execution errors not gracefully handled
   - Current: Crashes or silent failures
   - Target: User-friendly error messages with retry options
+  - Pattern: Use three-layer error recovery from open-rube
 
 ---
 
@@ -358,56 +396,81 @@ xcodebuild test -project Rube-ios.xcodeproj -scheme Rube-ios -destination 'platf
 
 ## 🚀 Next Steps (Prioritized)
 
-### Immediate (This Week)
-1. **Increase test coverage to 65%**
-   - Focus: NativeChatService tool execution paths (10% → 35% coverage)
-   - Add: 15-20 new test cases for tool execution scenarios
-   - Files: Rube-iosTests/NativeChatServiceTests.swift
-   - Estimated: 6 hours
+### Immediate (This Week - Based on Tool Router Learnings)
 
-2. **Improve error handling in tool execution**
-   - Update: NativeChatService error handling
-   - Add: User-friendly error messages
-   - Test: Error recovery paths
+1. **Implement Session-Based Architecture** (From open-rube pattern)
+   - Create session cache in ComposioManager
+   - Scope sessions to user + conversation ID
+   - Add TTL for memory cleanup
+   - Files: Services/ComposioManager.swift
+   - Estimated: 3 hours
+
+2. **Add In-Chat Authentication Flow** (From Tool Router in-chat auth pattern)
+   - Update OAuthService to detect missing auth
+   - Return OAuth links inline during chat
+   - Handle callback to resume tool execution
+   - Files: Services/OAuthService.swift, Views/Chat/ChatView.swift
+   - Estimated: 4 hours
+
+3. **Improve Error Handling** (From three-layer error recovery pattern)
+   - Auto-retry for transient errors (network, timeout)
+   - User input collection for auth failures
+   - Graceful degradation for unavailable tools
    - Files: Services/NativeChatService.swift
    - Estimated: 4 hours
 
-3. **Update documentation**
-   - Rewrite: rube-ios.md architecture section
-   - Add: Current tool execution flow diagrams
-   - Review: CLAUDE.md against current codebase
-   - Files: rube-ios.md, CLAUDE.md
+4. **Implement Custom Input Tool** (From REQUEST_USER_INPUT pattern)
+   - Design custom input modal for pre-OAuth data
+   - Handle complex OAuth flows requiring parameters
+   - Files: Views/Components/CustomInputModal.swift, Views/Chat/ChatView.swift
    - Estimated: 3 hours
 
-### Short-Term (This Month)
-4. **Migrate from MCP to Native Tool mode**
-   - Research: Composio Native mode implementation
-   - Update: ComposioManager initialization
-   - Test: All 20+ common tools
-   - Benchmark: Performance before/after
+### Short-Term (This Month - Validated from open-rube)
+
+5. **Implement Streaming-First Tool Execution** (From streaming pattern)
+   - Stream tool phases (start → running → complete)
+   - Use AsyncStream for real-time updates
+   - Show tool execution status in UI
+   - Files: Services/NativeChatService.swift, Views/Chat/ChatView.swift
+   - Estimated: 4 hours
+
+6. **Migrate from MCP to Native Tool Mode** (Performance validation)
+   - Review Composio Native mode documentation
+   - Update ComposioManager initialization
+   - Benchmark performance (target 50-75% improvement)
    - Files: Services/ComposioManager.swift
    - Estimated: 4 hours
-   - Expected Impact: 50-75% faster tool startup
+   - Expected Impact: 2-5s → ~1s startup time
 
-5. **Reach 85% test coverage**
-   - Add: Missing ComposioManager tests
-   - Add: Integration tests for OAuth flow
-   - Add: UI tests for chat interactions
-   - Files: Rube-iosTests/*
-   - Estimated: 12 hours
+7. **Increase test coverage to 65%** (Validated necessity from open-rube)
+   - Focus: NativeChatService tool execution paths
+   - Add: Session management tests
+   - Add: Authentication flow tests
+   - Files: Rube-iosTests/NativeChatServiceTests.swift
+   - Estimated: 6 hours
 
 ### Medium-Term (Q1 2026)
-6. **Security audit and hardening**
-   - Review: OAuth redirect URL validation
-   - Add: Certificate pinning for production
-   - Test: Token refresh mechanisms
+
+8. **Security audit and hardening** (Based on learnings)
+   - Review OAuth redirect URL validation
+   - Add certificate pinning for production
+   - Test token refresh mechanisms
+   - Implement secure credential storage (Keychain)
    - Estimated: 8 hours
 
-7. **Performance optimization and monitoring**
-   - Add: Analytics for tool execution metrics
-   - Monitor: Crash rates and error patterns
-   - Optimize: Memory usage in streaming
+9. **Performance optimization and monitoring** (From observability pattern)
+   - Add analytics for tool execution metrics
+   - Monitor crash rates and error patterns
+   - Implement session performance metrics
+   - Optimize memory usage in streaming
    - Estimated: 10 hours
+
+10. **Reach 85% test coverage** (From production requirements)
+    - Add missing ComposioManager tests
+    - Add integration tests for OAuth flow
+    - Add UI tests for chat interactions
+    - Files: Rube-iosTests/*
+    - Estimated: 12 hours
 
 ---
 
