@@ -41,9 +41,10 @@ final class NativeChatService {
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.rube.ios", category: "NativeChatService")
     
     // MARK: - Properties
-    
+
     private let openAI: OpenAIStreamService
     private let composioManager: ComposioManagerProtocol
+    private let oauthService: OAuthService
     
     private(set) var isStreaming = false
     private(set) var streamingContent = ""
@@ -59,7 +60,8 @@ final class NativeChatService {
     
     init(
         openAI: OpenAIStreamService? = nil,
-        composioManager: ComposioManagerProtocol? = nil
+        composioManager: ComposioManagerProtocol? = nil,
+        oauthService: OAuthService? = nil
     ) {
         self.composioManager = composioManager ?? ComposioManager.shared
         if let openAI = openAI {
@@ -72,6 +74,7 @@ final class NativeChatService {
             )
             self.openAI = OpenAIServiceWrapper(service: service)
         }
+        self.oauthService = oauthService ?? OAuthService()
     }
 
     func fetchModels() async throws -> [String] {
@@ -251,8 +254,49 @@ final class NativeChatService {
                     messages.append(.init(role: .tool, content: .text(resultString), toolCallID: call.id))
                 } catch {
                     if let index = self.streamingToolCalls.firstIndex(where: { $0.id == call.id }) { self.streamingToolCalls[index].status = .error }
-                    messages.append(.init(role: .tool, content: .text("{\"error\": \"\(error.localizedDescription)\"}"), toolCallID: call.id))
-                }
+
+                    // Check if this is an authentication error that can be handled in-chat
+                    if let toolkit = oauthService.detectAuthRequired(error: error) {
+                        logger.info("[NativeChatService] 🔐 Detected auth error for toolkit: \(toolkit)")
+
+                        // Try to get a Connect Link for in-chat authentication
+                        do {
+                            let userId = AuthService.shared.userEmail ?? "default_user"
+                            let conversationId = "default_conversation" // TODO: Pass actual conversation ID
+
+                            let connectLink = try await oauthService.getConnectLink(
+                                toolkit: toolkit,
+                                userId: userId,
+                                conversationId: conversationId
+                            )
+
+                            // Return a message with the Connect Link instead of failing
+                            let authMessage = """
+                            I need you to connect your \(toolkit.capitalized) account first.
+
+                            Please click here to authorize: [Connect \(toolkit.capitalized)](\(connectLink))
+
+                            Once connected, I'll continue with your request.
+                            """
+
+                            messages.append(.init(role: .tool, content: .text("{\"auth_required\": \"\(toolkit)\", \"connect_link\": \"\(connectLink)\"}"), toolCallID: call.id))
+
+                            let connectMessage = Message(
+                                id: UUID().uuidString,
+                                content: authMessage,
+                                role: .assistant
+                            )
+                            return connectMessage
+
+                        } catch {
+                            logger.error("[NativeChatService] ❌ Failed to get Connect Link: \(error)")
+                            // Fall back to regular error handling
+                            messages.append(.init(role: .tool, content: .text("{\"error\": \"\(error.localizedDescription)\"}"), toolCallID: call.id))
+                        }
+                    } else {
+                        // Regular error handling for non-auth errors
+                        messages.append(.init(role: .tool, content: .text("{\"error\": \"\(error.localizedDescription)\"}"), toolCallID: call.id))
+                    }
             }
             var nextTools = tools
             return try await runChatLoop(messages: &messages, tools: &nextTools, sessionId: sessionId, depth: depth + 1)
