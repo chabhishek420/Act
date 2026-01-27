@@ -140,13 +140,19 @@ final class NativeChatService {
         }
         
         var currentTools = openAITools
-        return try await runChatLoop(messages: &chatMessages, tools: &currentTools, sessionId: sessionId)
+        return try await runChatLoop(
+            messages: &chatMessages,
+            tools: &currentTools,
+            sessionId: sessionId,
+            conversationId: effectiveConversationId
+        )
     }
-    
+
     private func runChatLoop(
         messages: inout [ChatCompletionParameters.Message],
         tools: inout [ChatCompletionParameters.Tool],
         sessionId: String,
+        conversationId: String,
         depth: Int = 0
     ) async throws -> Message {
         guard depth < 10 else { return Message(content: "Error: Tool depth exceeded.", role: .assistant) }
@@ -224,11 +230,13 @@ final class NativeChatService {
                         toolArgs["memory"] = currentMemory
                     }
 
+                    // Execute tool with retry logic for transient errors
                     let result: ToolRouterExecuteResponse
-                    if call.name.hasPrefix("COMPOSIO_") {
-                        result = try await composioManager.executeMetaTool(call.name, sessionId: sessionId, arguments: toolArgs)
-                    } else {
-                        result = try await composioManager.executeSessionTool(call.name, sessionId: sessionId, arguments: toolArgs)
+                    do {
+                        result = try await executeToolWithRetry(call.name, sessionId: sessionId, arguments: toolArgs)
+                    } catch let retryError {
+                        // If retry exhausted, throw to outer error handler
+                        throw retryError
                     }
 
                     // Emit phase: Tool execution completed
@@ -275,14 +283,7 @@ final class NativeChatService {
                     }
 
                     // THREE-LAYER ERROR RECOVERY (From open-rube pattern)
-
-                    // Layer 1: Check if this is a transient error that should be retried
-                    if isTransientError(error) {
-                        logger.info("[NativeChatService] ⚠️ Transient error detected for \(call.name), will retry: \(error.localizedDescription)")
-                        // Let the outer loop retry on transient errors
-                        messages.append(.init(role: .tool, content: .text("{\"error\": \"temporary_error\", \"should_retry\": true}"), toolCallID: call.id))
-                        continue
-                    }
+                    // Layer 1: Auto-retry already handled by executeToolWithRetry wrapper
 
                     // Layer 2: Check if this is an authentication error that can be handled in-chat
                     if let toolkit = oauthService.detectAuthRequired(error: error) {
@@ -291,7 +292,6 @@ final class NativeChatService {
                         // Try to get a Connect Link for in-chat authentication
                         do {
                             let userId = AuthService.shared.userEmail ?? "default_user"
-                            let conversationId = "default_conversation" // TODO: Pass actual conversation ID
 
                             let connectLink = try await oauthService.getConnectLink(
                                 toolkit: toolkit,
@@ -330,7 +330,13 @@ final class NativeChatService {
                     }
             }
             var nextTools = tools
-            return try await runChatLoop(messages: &messages, tools: &nextTools, sessionId: sessionId, depth: depth + 1)
+            return try await runChatLoop(
+                messages: &messages,
+                tools: &nextTools,
+                sessionId: sessionId,
+                conversationId: conversationId,
+                depth: depth + 1
+            )
         } else {
             return Message(id: UUID().uuidString, content: fullContent.isEmpty ? "No response." : fullContent, role: .assistant)
         }
@@ -426,6 +432,52 @@ final class NativeChatService {
     }
 
     // MARK: - Error Handling (Three-Layer Recovery Pattern)
+
+    /// Executes a tool with automatic retry for transient errors
+    private func executeToolWithRetry(
+        _ toolName: String,
+        sessionId: String,
+        arguments: [String: Any]?,
+        maxAttempts: Int = 3
+    ) async throws -> ToolRouterExecuteResponse {
+        var lastError: Error?
+
+        for attempt in 1...maxAttempts {
+            do {
+                // Execute the tool
+                let result: ToolRouterExecuteResponse
+                if toolName.hasPrefix("COMPOSIO_") {
+                    result = try await composioManager.executeMetaTool(toolName, sessionId: sessionId, arguments: arguments)
+                } else {
+                    result = try await composioManager.executeSessionTool(toolName, sessionId: sessionId, arguments: arguments)
+                }
+
+                // Success - return result
+                if attempt > 1 {
+                    logger.info("[NativeChatService] ✅ Tool succeeded after \(attempt) attempts: \(toolName)")
+                }
+                return result
+
+            } catch {
+                lastError = error
+
+                // Check if this is a transient error worth retrying
+                if isTransientError(error) && attempt < maxAttempts {
+                    let delay = pow(2.0, Double(attempt)) * 1.0 // Exponential backoff: 2s, 4s, 8s
+                    logger.info("[NativeChatService] ⚠️ Transient error on attempt \(attempt)/\(maxAttempts) for \(toolName), retrying in \(delay)s: \(error.localizedDescription)")
+
+                    try await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+                    continue
+                } else {
+                    // Not transient or max attempts reached - throw
+                    throw error
+                }
+            }
+        }
+
+        // Should never reach here, but throw last error if we do
+        throw lastError ?? NativeChatError.invalidResponse
+    }
 
     /// Determines if an error is transient and should be automatically retried
     /// Transient errors: network timeouts, temporary service unavailability, rate limits
