@@ -255,7 +255,17 @@ final class NativeChatService {
                 } catch {
                     if let index = self.streamingToolCalls.firstIndex(where: { $0.id == call.id }) { self.streamingToolCalls[index].status = .error }
 
-                    // Check if this is an authentication error that can be handled in-chat
+                    // THREE-LAYER ERROR RECOVERY (From open-rube pattern)
+
+                    // Layer 1: Check if this is a transient error that should be retried
+                    if isTransientError(error) {
+                        logger.info("[NativeChatService] ⚠️ Transient error detected for \(call.name), will retry: \(error.localizedDescription)")
+                        // Let the outer loop retry on transient errors
+                        messages.append(.init(role: .tool, content: .text("{\"error\": \"temporary_error\", \"should_retry\": true}"), toolCallID: call.id))
+                        continue
+                    }
+
+                    // Layer 2: Check if this is an authentication error that can be handled in-chat
                     if let toolkit = oauthService.detectAuthRequired(error: error) {
                         logger.info("[NativeChatService] 🔐 Detected auth error for toolkit: \(toolkit)")
 
@@ -290,12 +300,14 @@ final class NativeChatService {
 
                         } catch {
                             logger.error("[NativeChatService] ❌ Failed to get Connect Link: \(error)")
-                            // Fall back to regular error handling
+                            // Fall back to Layer 3 (graceful degradation)
                             messages.append(.init(role: .tool, content: .text("{\"error\": \"\(error.localizedDescription)\"}"), toolCallID: call.id))
                         }
                     } else {
-                        // Regular error handling for non-auth errors
-                        messages.append(.init(role: .tool, content: .text("{\"error\": \"\(error.localizedDescription)\"}"), toolCallID: call.id))
+                        // Layer 3: Graceful degradation for non-recoverable errors
+                        let userFriendlyError = generateUserFriendlyErrorMessage(error: error, toolName: call.name)
+                        logger.error("[NativeChatService] ❌ Tool execution failed: \(userFriendlyError)")
+                        messages.append(.init(role: .tool, content: .text("{\"error\": \"\(userFriendlyError)\"}"), toolCallID: call.id))
                     }
             }
             var nextTools = tools
@@ -392,6 +404,47 @@ final class NativeChatService {
             }
         }
         throw lastError ?? NativeChatError.invalidResponse
+    }
+
+    // MARK: - Error Handling (Three-Layer Recovery Pattern)
+
+    /// Determines if an error is transient and should be automatically retried
+    /// Transient errors: network timeouts, temporary service unavailability, rate limits
+    private func isTransientError(_ error: Error) -> Bool {
+        let errorString = error.localizedDescription.lowercased()
+
+        // Check for common transient error patterns
+        return errorString.contains("timeout") ||
+               errorString.contains("temporary") ||
+               errorString.contains("rate limit") ||
+               errorString.contains("service unavailable") ||
+               errorString.contains("connection reset") ||
+               errorString.contains("network") && errorString.contains("error")
+    }
+
+    /// Generates a user-friendly error message based on error type
+    /// Used for Layer 3 (graceful degradation) error handling
+    private func generateUserFriendlyErrorMessage(error: Error, toolName: String) -> String {
+        let errorString = error.localizedDescription.lowercased()
+        let toolDisplay = toolName.replacingOccurrences(of: "_", with: " ").lowercased()
+
+        // Categorize and provide actionable error messages
+        if errorString.contains("timeout") {
+            return "The tool \(toolDisplay) is taking too long to respond. Please try again in a moment."
+        } else if errorString.contains("rate limit") {
+            return "Too many requests to \(toolDisplay). Please wait a moment before trying again."
+        } else if errorString.contains("connection") || errorString.contains("network") {
+            return "Network connection error while using \(toolDisplay). Please check your internet connection and try again."
+        } else if errorString.contains("unauthorized") || errorString.contains("forbidden") {
+            return "You don't have permission to use \(toolDisplay). Please check your credentials."
+        } else if errorString.contains("not found") {
+            return "The resource for \(toolDisplay) was not found. It may have been deleted."
+        } else if errorString.contains("invalid") || errorString.contains("malformed") {
+            return "Invalid parameters passed to \(toolDisplay). Please check your input."
+        } else {
+            // Generic fallback message
+            return "Failed to execute \(toolDisplay) tool. Error: \(error.localizedDescription)"
+        }
     }
 
     private func createMetaToolSchemas() -> [ChatCompletionParameters.Tool] {
