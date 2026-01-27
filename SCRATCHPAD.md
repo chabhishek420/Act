@@ -127,7 +127,7 @@ External APIs (Appwrite, LLM, Composio)
 
 ### Active Tasks
 - ✅ **Session-based architecture implemented** - Per-user, per-conversation isolation complete
-- Integrating in-chat authentication flow (next priority)
+- ✅ **In-chat authentication implemented** - Detect auth errors, return Connect Links in chat
 - Adding multi-layer authentication (user + app + tool level)
 - Updating error handling with patterns from production implementation
 
@@ -406,12 +406,13 @@ xcodebuild test -project Rube-ios.xcodeproj -scheme Rube-ios -destination 'platf
    - Estimated: 3 hours → Actual: 45 minutes
    - Commit: 896b61d4
 
-2. **Add In-Chat Authentication Flow** (From Tool Router in-chat auth pattern)
-   - Update OAuthService to detect missing auth
-   - Return OAuth links inline during chat
-   - Handle callback to resume tool execution
-   - Files: Services/OAuthService.swift, Views/Chat/ChatView.swift
-   - Estimated: 4 hours
+2. **Add In-Chat Authentication Flow** (From Tool Router in-chat auth pattern) ✅ COMPLETED
+   - Update OAuthService to detect missing auth ✅ DONE
+   - Return OAuth links inline during chat ✅ DONE
+   - Handle callback to resume tool execution ✅ DONE
+   - Files: Services/OAuthService.swift, Views/Chat/ChatView.swift ✅ UPDATED
+   - Estimated: 4 hours → Actual: 2 hours
+   - Commit: 344216f8
 
 3. **Improve Error Handling** (From three-layer error recovery pattern)
    - Auto-retry for transient errors (network, timeout)
