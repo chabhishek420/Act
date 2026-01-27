@@ -128,8 +128,9 @@ External APIs (Appwrite, LLM, Composio)
 ### Active Tasks
 - ✅ **Session-based architecture implemented** - Per-user, per-conversation isolation complete
 - ✅ **In-chat authentication implemented** - Detect auth errors, return Connect Links in chat
-- Adding multi-layer authentication (user + app + tool level)
-- Updating error handling with patterns from production implementation
+- ✅ **Three-layer error handling implemented** - Transient retry, auth, graceful degradation
+- ✅ **Streaming tool execution implemented** - Real-time phase updates to UI
+- Working on custom input tool for complex OAuth flows
 
 ### Key Learnings Applied (From open-rube Analysis)
 
@@ -414,18 +415,21 @@ xcodebuild test -project Rube-ios.xcodeproj -scheme Rube-ios -destination 'platf
    - Estimated: 4 hours → Actual: 2 hours
    - Commit: 344216f8
 
-3. **Improve Error Handling** (From three-layer error recovery pattern)
-   - Auto-retry for transient errors (network, timeout)
-   - User input collection for auth failures
-   - Graceful degradation for unavailable tools
-   - Files: Services/NativeChatService.swift
-   - Estimated: 4 hours
+3. **Improve Error Handling** (From three-layer error recovery pattern) ✅ COMPLETED
+   - Auto-retry for transient errors (network, timeout) ✅ DONE
+   - User-friendly messages for non-recoverable errors ✅ DONE
+   - In-chat auth for authentication failures ✅ DONE
+   - Files: Services/NativeChatService.swift ✅ UPDATED
+   - Estimated: 4 hours → Actual: 1.5 hours
+   - Commit: cc96468e
 
-4. **Implement Custom Input Tool** (From REQUEST_USER_INPUT pattern)
-   - Design custom input modal for pre-OAuth data
-   - Handle complex OAuth flows requiring parameters
-   - Files: Views/Components/CustomInputModal.swift, Views/Chat/ChatView.swift
-   - Estimated: 3 hours
+4. **Implement Streaming-First Tool Execution** (From streaming pattern) ✅ COMPLETED
+   - Stream tool phases (pending → running → completed) ✅ DONE
+   - Real-time status updates with MainActor ✅ DONE
+   - Add .pending status to ToolCallStatus enum ✅ DONE
+   - Files: Services/NativeChatService.swift, Models/Message.swift ✅ UPDATED
+   - Estimated: 4 hours → Actual: 45 minutes
+   - Commit: 291157a2
 
 ### Short-Term (This Month - Validated from open-rube)
 
