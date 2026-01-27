@@ -188,7 +188,15 @@ final class NativeChatService {
             messages.append(.init(role: .assistant, content: .text(fullContent), toolCalls: assistantToolCalls))
             
             for call in finalizedCalls {
-                self.streamingToolCalls.append(ToolCall(id: call.id, name: call.name, status: .running))
+                self.streamingToolCalls.append(ToolCall(id: call.id, name: call.name, input: call.arguments.dictionary, status: .pending))
+
+                // Emit phase: Tool call starting
+                await MainActor.run {
+                    if let index = self.streamingToolCalls.firstIndex(where: { $0.id == call.id }) {
+                        self.streamingToolCalls[index].status = .running
+                        logger.debug("[NativeChatService] 🚀 Starting tool: \(call.name)")
+                    }
+                }
                 do {
                     // Handle REQUEST_USER_INPUT specially - this pauses the chat loop for user input
                     if call.name == "REQUEST_USER_INPUT" {
@@ -223,9 +231,14 @@ final class NativeChatService {
                         result = try await composioManager.executeSessionTool(call.name, sessionId: sessionId, arguments: toolArgs)
                     }
 
-                    if let index = self.streamingToolCalls.firstIndex(where: { $0.id == call.id }) {
-                        self.streamingToolCalls[index].status = .completed
-                        self.streamingToolCalls[index].output = result.data.mapValues { $0.value }
+                    // Emit phase: Tool execution completed
+                    await MainActor.run {
+                        if let index = self.streamingToolCalls.firstIndex(where: { $0.id == call.id }) {
+                            self.streamingToolCalls[index].status = .completed
+                            self.streamingToolCalls[index].output = result.data.mapValues { $0.value }
+                            logger.debug("[NativeChatService] ✅ Completed tool: \(call.name)")
+                        }
+                    }
                         
                         // Capture memory updates from Search or Multi-Execute
                         if let updatedMemory = result.data["memory"]?.value as? [String: [String]] {
@@ -253,7 +266,13 @@ final class NativeChatService {
                     let resultString = (try? JSONEncoder().encode(result.data)).flatMap { String(data: $0, encoding: .utf8) } ?? "{}"
                     messages.append(.init(role: .tool, content: .text(resultString), toolCallID: call.id))
                 } catch {
-                    if let index = self.streamingToolCalls.firstIndex(where: { $0.id == call.id }) { self.streamingToolCalls[index].status = .error }
+                    // Emit phase: Tool execution failed
+                    await MainActor.run {
+                        if let index = self.streamingToolCalls.firstIndex(where: { $0.id == call.id }) {
+                            self.streamingToolCalls[index].status = .error
+                            logger.error("[NativeChatService] ❌ Tool failed: \(call.name) - \(error.localizedDescription)")
+                        }
+                    }
 
                     // THREE-LAYER ERROR RECOVERY (From open-rube pattern)
 

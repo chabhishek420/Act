@@ -79,9 +79,10 @@ struct ToolCall: Identifiable, Equatable {
 }
 
 enum ToolCallStatus: Equatable {
-    case running
-    case completed
-    case error
+    case pending          // Tool call created, waiting to execute
+    case running          // Tool is executing
+    case completed        // Tool execution completed successfully
+    case error            // Tool execution failed with error
 }
 
 struct Attachment: Identifiable, Codable, Equatable {
