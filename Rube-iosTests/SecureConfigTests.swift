@@ -14,6 +14,11 @@ final class SecureConfigTests: XCTestCase {
         super.setUp()
         // Clear Keychain before each test to ensure predictable state
         try? SecureConfig.clearAllCredentials()
+        // Clear environment variables to avoid pollution from TestConfiguration or previous tests
+        unsetenv("COMPOSIO_API_KEY")
+        unsetenv("CUSTOM_API_KEY")
+        unsetenv("CUSTOM_API_URL")
+        unsetenv("LLM_MODEL")
     }
 
     override func tearDown() {
